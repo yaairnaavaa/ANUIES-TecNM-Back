@@ -45,7 +45,6 @@ const roleSchema = new mongoose.Schema({
 });
 
 // Índices
-roleSchema.index({ name: 1 });
 roleSchema.index({ active: 1 });
 roleSchema.index({ level: 1 });
 

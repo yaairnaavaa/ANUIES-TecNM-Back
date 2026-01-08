@@ -192,9 +192,8 @@ prospectSchema.methods.verifyRegistrationComplete = function() {
 };
 
 // Pre-save hook
-prospectSchema.pre('save', function(next) {
+prospectSchema.pre('save', async function() {
   this.processStatus.lastInteraction = new Date();
-  next();
 });
 
 module.exports = mongoose.model('Prospect', prospectSchema);
