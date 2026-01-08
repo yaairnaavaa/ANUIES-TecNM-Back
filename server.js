@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const connectDB = require('./config/database');
@@ -11,9 +13,28 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Seguridad
+app.use(helmet());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Límite de 100 peticiones por ventana
+  message: 'Demasiadas peticiones desde esta IP, por favor intenta de nuevo más tarde.'
+});
+app.use('/api/', limiter);
+
+// CORS
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+// Logging
 app.use(morgan('dev'));
+
+// Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
