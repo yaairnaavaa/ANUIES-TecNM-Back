@@ -1,4 +1,4 @@
-const Prospect = require('../models/Interesado');
+const Prospect = require('../models/Prospect');
 const asyncHandler = require('../middleware/asyncHandler');
 
 // @desc    Registrar nuevo interesado (público)

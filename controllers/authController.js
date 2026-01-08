@@ -1,4 +1,4 @@
-const User = require('../models/Usuario');
+const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const asyncHandler = require('../middleware/asyncHandler');
 

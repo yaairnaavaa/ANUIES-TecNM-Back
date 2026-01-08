@@ -10,13 +10,13 @@ connectDB();
 // Datos de ejemplo
 const seedData = async () => {
   try {
-    console.log('🗑️  Limpiando base de datos...');
+    console.log('Limpiando base de datos...');
     
     // Limpiar colecciones (solo para desarrollo)
     await User.deleteMany({});
     await IES.deleteMany({});
 
-    console.log('👤 Creando usuario administrador nacional...');
+    console.log('Creando usuario administrador nacional...');
     
     // Crear Admin Nacional
     const adminNacional = await User.create({
@@ -30,9 +30,9 @@ const seedData = async () => {
       active: true
     });
 
-    console.log('✅ Usuario Admin Nacional creado:', adminNacional.email);
+    console.log('Usuario Admin Nacional creado:', adminNacional.email);
 
-    console.log('🏫 Creando IES de ejemplo...');
+    console.log('Creando IES de ejemplo...');
 
     // Crear una IES de ejemplo
     const iesExample = await IES.create({
@@ -94,9 +94,9 @@ const seedData = async () => {
       active: true
     });
 
-    console.log('✅ IES creada:', iesExample.name);
+    console.log('IES creada:', iesExample.name);
 
-    console.log('👤 Creando usuario administrador de IES...');
+    console.log('Creando usuario administrador de IES...');
 
     // Crear Admin IES
     const adminIES = await User.create({
@@ -111,9 +111,9 @@ const seedData = async () => {
       active: true
     });
 
-    console.log('✅ Usuario Admin IES creado:', adminIES.email);
+    console.log('Usuario Admin IES creado:', adminIES.email);
 
-    console.log('👤 Creando usuario operativo...');
+    console.log('Creando usuario operativo...');
 
     // Crear Operativo IES
     const operativoIES = await User.create({
@@ -128,26 +128,26 @@ const seedData = async () => {
       active: true
     });
 
-    console.log('✅ Usuario Operativo IES creado:', operativoIES.email);
+    console.log('Usuario Operativo IES creado:', operativoIES.email);
 
-    console.log('\n📋 RESUMEN DE DATOS DE PRUEBA:');
+    console.log('\nRESUMEN DE DATOS DE PRUEBA:');
     console.log('================================');
-    console.log('\n🔐 CREDENCIALES DE ACCESO:');
-    console.log('\n1️⃣  Admin Nacional:');
+    console.log('\nCREDENCIALES DE ACCESO:');
+    console.log('\n1. Admin Nacional:');
     console.log('   Email: admin@tecnm.mx');
     console.log('   Password: Admin123!');
-    console.log('\n2️⃣  Admin IES (IT Morelia):');
+    console.log('\n2. Admin IES (IT Morelia):');
     console.log('   Email: director@itmorelia.edu.mx');
     console.log('   Password: Director123!');
-    console.log('\n3️⃣  Operativo IES (IT Morelia):');
+    console.log('\n3. Operativo IES (IT Morelia):');
     console.log('   Email: operativo@itmorelia.edu.mx');
     console.log('   Password: Operativo123!');
     console.log('\n================================');
-    console.log('✅ Seed completado exitosamente!\n');
+    console.log('Seed completado exitosamente!\n');
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error en el seed:', error);
+    console.error('Error en el seed:', error);
     process.exit(1);
   }
 };

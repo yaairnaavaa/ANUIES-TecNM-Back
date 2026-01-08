@@ -1,4 +1,4 @@
-const Campaign = require('../models/Campana');
+const Campaign = require('../models/Campaign');
 const asyncHandler = require('../middleware/asyncHandler');
 
 // @desc    Obtener todas las campañas
