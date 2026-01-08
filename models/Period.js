@@ -129,14 +129,13 @@ periodSchema.index({ isCurrent: 1 });
 periodSchema.index({ 'dates.enrollmentStart': 1 });
 
 // Solo puede haber un periodo activo a la vez
-periodSchema.pre('save', async function(next) {
+periodSchema.pre('save', async function() {
   if (this.isCurrent) {
     await this.constructor.updateMany(
       { _id: { $ne: this._id } },
       { $set: { isCurrent: false } }
     );
   }
-  next();
 });
 
 // Método para verificar si está en periodo de inscripción
