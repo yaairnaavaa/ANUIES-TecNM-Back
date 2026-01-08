@@ -81,8 +81,30 @@ const iesSchema = new mongoose.Schema({
   }],
   institutionalImage: {
     logo: String, // URL del logo
+    logoPublicId: String, // ID de Cloudinary si se usa
     banner: String, // URL del banner
+    bannerPublicId: String, // ID de Cloudinary si se usa
     gallery: [String] // URLs de imágenes del campus
+  },
+  branding: {
+    primaryColor: {
+      type: String,
+      default: '#003366',
+      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
+    },
+    secondaryColor: {
+      type: String,
+      default: '#FFFFFF',
+      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
+    },
+    accentColor: {
+      type: String,
+      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
+    },
+    fontFamily: {
+      type: String,
+      default: 'Arial, sans-serif'
+    }
   },
   configuration: {
     enrollmentPeriod: {
