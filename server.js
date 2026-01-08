@@ -49,6 +49,11 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de la API
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/ies', require('./routes/iesRoutes'));
+app.use('/api/iems', require('./routes/iemsRoutes'));
+app.use('/api/campaigns', require('./routes/campaignRoutes'));
+app.use('/api/prospects', require('./routes/prospectRoutes'));
 app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // Manejo de rutas no encontradas
