@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  nombre: {
+  firstName: {
     type: String,
     required: [true, 'El nombre es requerido'],
     trim: true
   },
-  apellidoPaterno: {
+  lastName: {
     type: String,
     required: [true, 'El apellido paterno es requerido'],
     trim: true
   },
-  apellidoMaterno: {
+  secondLastName: {
     type: String,
     trim: true
   },
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
     select: false // No devolver password por defecto en queries
   },
-  rol: {
+  role: {
     type: String,
     enum: {
       values: ['Admin Nacional', 'Admin IES', 'Operativo IES', 'Interesado'],
@@ -43,25 +43,25 @@ const userSchema = new mongoose.Schema({
     ref: 'IES',
     // Solo requerido para roles de IES
     required: function() {
-      return ['Admin IES', 'Operativo IES'].includes(this.rol);
+      return ['Admin IES', 'Operativo IES'].includes(this.role);
     }
   },
-  telefono: {
+  phone: {
     type: String,
     trim: true
   },
-  activo: {
+  active: {
     type: Boolean,
     default: true
   },
-  ultimoAcceso: {
+  lastAccess: {
     type: Date
   },
-  intentosFallidos: {
+  failedAttempts: {
     type: Number,
     default: 0
   },
-  bloqueadoHasta: {
+  lockedUntil: {
     type: Date
   }
 }, {
@@ -69,15 +69,14 @@ const userSchema = new mongoose.Schema({
 });
 
 // Encriptar password antes de guardar
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
   // Solo encriptar si el password fue modificado
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
   
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // Método para comparar passwords
