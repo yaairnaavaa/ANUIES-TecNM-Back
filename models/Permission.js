@@ -33,7 +33,7 @@ const permissionSchema = new mongoose.Schema({
     trim: true
   },
   conditions: {
-    type: mongoose.Schema.Mixed,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   active: {
@@ -45,7 +45,6 @@ const permissionSchema = new mongoose.Schema({
 });
 
 // Índices
-permissionSchema.index({ name: 1 });
 permissionSchema.index({ module: 1 });
 permissionSchema.index({ active: 1 });
 permissionSchema.index({ module: 1, action: 1 });

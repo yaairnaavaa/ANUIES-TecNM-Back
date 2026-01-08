@@ -123,7 +123,6 @@ const periodSchema = new mongoose.Schema({
 });
 
 // Índices
-periodSchema.index({ code: 1 });
 periodSchema.index({ academicYear: 1, semester: 1 });
 periodSchema.index({ status: 1 });
 periodSchema.index({ isCurrent: 1 });
