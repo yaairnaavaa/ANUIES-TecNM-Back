@@ -10,17 +10,11 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Todas las rutas están protegidas y solo para Admin Nacional
-router.use(protect);
-router.use(authorize('Admin Nacional'));
-
-router.route('/')
-  .get(getAllRoles)
-  .post(createRole);
-
-router.route('/:id')
-  .get(getRoleById)
-  .put(updateRole)
-  .delete(deleteRole);
+// Todas las rutas públicas
+router.get('/', getAllRoles);
+router.get('/:id', getRoleById);
+router.post('/', createRole);
+router.put('/:id', updateRole);
+router.delete('/:id', deleteRole);
 
 module.exports = router;

@@ -3,12 +3,12 @@ const asyncHandler = require('../middleware/asyncHandler');
 
 // @desc    Obtener todas las campañas
 // @route   GET /api/campaigns
-// @access  Private
+// @access  Public (con filtros si está autenticado)
 exports.getAllCampaigns = asyncHandler(async (req, res) => {
   let query = Campaign.find();
 
   // Si es Admin IES u Operativo, solo puede ver campañas de su IES
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (req.user && ['Admin IES', 'Operativo IES'].includes(req.user.role)) {
     query = query.where('ies').equals(req.user.ies);
   }
 

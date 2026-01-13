@@ -11,19 +11,12 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Ruta pública para ver carreras
+// Todas las rutas públicas
+router.get('/', getAllIES);
 router.get('/:id/careers', getIESCareers);
-
-// Rutas protegidas
-router.use(protect);
-
-router.route('/')
-  .get(getAllIES)
-  .post(authorize('Admin Nacional'), createIES);
-
-router.route('/:id')
-  .get(getIESById)
-  .put(authorize('Admin Nacional', 'Admin IES'), updateIES)
-  .delete(authorize('Admin Nacional'), deleteIES);
+router.get('/:id', getIESById);
+router.post('/', createIES);
+router.put('/:id', updateIES);
+router.delete('/:id', deleteIES);
 
 module.exports = router;

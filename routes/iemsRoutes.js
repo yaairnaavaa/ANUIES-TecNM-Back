@@ -11,19 +11,14 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Ruta pública para búsqueda
+// Rutas públicas de consulta
 router.get('/search', searchIEMS);
+router.get('/', getAllIEMS);
+router.get('/:id', getIEMSById);
 
-// Rutas protegidas
-router.use(protect);
-
-router.route('/')
-  .get(getAllIEMS)
-  .post(authorize('Admin Nacional', 'Admin IES'), createIEMS);
-
-router.route('/:id')
-  .get(getIEMSById)
-  .put(authorize('Admin Nacional', 'Admin IES'), updateIEMS)
-  .delete(authorize('Admin Nacional'), deleteIEMS);
+// Rutas protegidas para modificación
+router.post('/', protect, authorize('Admin Nacional', 'Admin IES'), createIEMS);
+router.put('/:id', protect, authorize('Admin Nacional', 'Admin IES'), updateIEMS);
+router.delete('/:id', protect, authorize('Admin Nacional'), deleteIEMS);
 
 module.exports = router;

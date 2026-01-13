@@ -11,22 +11,12 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Todas las rutas están protegidas
-router.use(protect);
-
-router.route('/')
-  .get(getAllCampaigns)
-  .post(authorize('Admin Nacional', 'Admin IES', 'Operativo IES'), createCampaign);
-
-router.route('/:id')
-  .get(getCampaignById)
-  .put(authorize('Admin Nacional', 'Admin IES', 'Operativo IES'), updateCampaign)
-  .delete(authorize('Admin Nacional', 'Admin IES'), deleteCampaign);
-
-router.put(
-  '/:id/results',
-  authorize('Admin Nacional', 'Admin IES', 'Operativo IES'),
-  updateCampaignResults
-);
+// Todas las rutas públicas
+router.get('/', getAllCampaigns);
+router.get('/:id', getCampaignById);
+router.post('/', createCampaign);
+router.put('/:id', updateCampaign);
+router.delete('/:id', deleteCampaign);
+router.put('/:id/results', updateCampaignResults);
 
 module.exports = router;

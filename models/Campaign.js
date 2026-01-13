@@ -146,7 +146,7 @@ campaignSchema.index({ type: 1, specificModality: 1 });
 campaignSchema.index({ status: 1 });
 
 // Pre-save: calcular costo por impacto
-campaignSchema.pre('save', function(next) {
+campaignSchema.pre('save', function() {
   if (this.reach.actual && this.costs.total) {
     this.costs.costPerImpact = this.costs.total / this.reach.actual;
   } else if (this.reach.estimated && this.costs.total) {
@@ -157,8 +157,6 @@ campaignSchema.pre('save', function(next) {
   if (this.results.generatedLeads && this.reach.actual) {
     this.results.conversionRate = (this.results.generatedLeads / this.reach.actual) * 100;
   }
-  
-  next();
 });
 
 // Método para actualizar estado según fechas
