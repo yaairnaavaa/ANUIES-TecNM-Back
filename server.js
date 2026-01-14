@@ -1,12 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+require("dotenv").config();
 
-const connectDB = require('./config/database');
-const errorHandler = require('./middleware/errorHandler');
+const connectDB = require("./config/database");
+const errorHandler = require("./middleware/errorHandler");
 
 // Conectar a la base de datos
 connectDB();
@@ -20,19 +20,20 @@ app.use(helmet());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Límite de 100 peticiones por ventana
-  message: 'Demasiadas peticiones desde esta IP, por favor intenta de nuevo más tarde.'
+  message:
+    "Demasiadas peticiones desde esta IP, por favor intenta de nuevo más tarde.",
 });
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 
 // CORS
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
   credentials: true,
 };
 app.use(cors(corsOptions));
 
 // Logging
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 // Body parser
 app.use(express.json());
@@ -40,30 +41,40 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 // Ruta de prueba
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    message: 'API ANUIES-TecNM Backend',
-    status: 'running',
-    version: '1.0.0'
+    message: "API ANUIES-TecNM Backend",
+    status: "running",
+    version: "1.0.0",
   });
 });
 
 // Rutas de la API
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/roles', require('./routes/roleRoutes'));
-app.use('/api/permissions', require('./routes/permissionRoutes'));
-app.use('/api/periods', require('./routes/periodRoutes'));
-app.use('/api/ies', require('./routes/iesRoutes'));
-app.use('/api/iems', require('./routes/iemsRoutes'));
-app.use('/api/campaigns', require('./routes/campaignRoutes'));
-app.use('/api/prospects', require('./routes/prospectRoutes'));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/roles", require("./routes/roleRoutes"));
+app.use("/api/permissions", require("./routes/permissionRoutes"));
+app.use("/api/periods", require("./routes/periodRoutes"));
+app.use("/api/ies", require("./routes/iesRoutes"));
+app.use("/api/iems", require("./routes/iemsRoutes"));
+app.use("/api/campaigns", require("./routes/campaignRoutes"));
+app.use("/api/prospects", require("./routes/prospectRoutes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
+
+// === REGISTRO GLOBAL DE MODELOS ===
+require("./models/MenuPermission");
+require("./models/Role");
+require("./models/User");
+require("./models/IES");
+require("./models/IEMS"); // si existe
+require("./models/Period"); // si existe
+require("./models/Campaign"); // si existe
+require("./models/Prospect"); // si existe
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Ruta no encontrada'
+    message: "Ruta no encontrada",
   });
 });
 
@@ -74,9 +85,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
-  console.log(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
   console.log(`URL Base API: http://localhost:${PORT}/api`);
 });
 
 module.exports = app;
-
