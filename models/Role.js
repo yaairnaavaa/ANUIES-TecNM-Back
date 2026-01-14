@@ -10,7 +10,6 @@ const roleSchema = new mongoose.Schema({
   },
   displayName: {
     type: String,
-    required: [true, 'El nombre para mostrar es requerido'],
     trim: true
   },
   description: {
@@ -23,14 +22,12 @@ const roleSchema = new mongoose.Schema({
   }],
   level: {
     type: Number,
-    required: true,
     min: 1,
     max: 10
   },
   scope: {
     type: String,
-    enum: ['Nacional', 'IES', 'IEMS', 'General'],
-    required: true
+    enum: ['Nacional', 'IES', 'IEMS', 'General']
   },
   requiresIES: {
     type: Boolean,

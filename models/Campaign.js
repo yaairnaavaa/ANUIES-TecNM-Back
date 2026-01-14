@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const campaignSchema = new mongoose.Schema({
   ies: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'IES',
-    required: [true, 'La IES es requerida']
+    ref: 'IES'
   },
   name: {
     type: String,
@@ -20,8 +19,7 @@ const campaignSchema = new mongoose.Schema({
     enum: {
       values: ['Presencial', 'Tradicional', 'Digital'],
       message: '{VALUE} no es un tipo válido'
-    },
-    required: true
+    }
   },
   specificModality: {
     type: String,
@@ -56,23 +54,15 @@ const campaignSchema = new mongoose.Schema({
       'Reels y Trends',
       'Publicaciones fotográficas especializadas',
       'Videoconferencias en plataformas educativas'
-    ],
-    required: true
+    ]
   },
   period: {
-    startDate: {
-      type: Date,
-      required: true
-    },
-    endDate: {
-      type: Date,
-      required: true
-    }
+    startDate: Date,
+    endDate: Date
   },
   reach: {
     estimated: {
       type: Number,
-      required: [true, 'El alcance estimado es requerido'],
       min: 0
     },
     actual: {
@@ -88,7 +78,6 @@ const campaignSchema = new mongoose.Schema({
   costs: {
     total: {
       type: Number,
-      required: [true, 'El costo total es requerido'],
       min: 0
     },
     costPerImpact: {

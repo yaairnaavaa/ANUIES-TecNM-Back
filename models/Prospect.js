@@ -4,12 +4,10 @@ const prospectSchema = new mongoose.Schema({
   // Datos personales
   firstName: {
     type: String,
-    required: [true, 'El nombre es requerido'],
     trim: true
   },
   lastName: {
     type: String,
-    required: [true, 'El apellido paterno es requerido'],
     trim: true
   },
   secondLastName: {
@@ -20,17 +18,12 @@ const prospectSchema = new mongoose.Schema({
   // Datos de contacto
   email: {
     type: String,
-    required: [true, 'El email es requerido'],
     lowercase: true,
-    trim: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Email inválido']
+    trim: true
   },
   phone: {
     landline: String,
-    mobile: {
-      type: String,
-      required: [true, 'El teléfono móvil es requerido']
-    }
+    mobile: String
   },
   
   // Dirección
@@ -41,17 +34,13 @@ const prospectSchema = new mongoose.Schema({
     locality: String,
     municipality: String,
     state: String,
-    postalCode: {
-      type: String,
-      required: true
-    }
+    postalCode: String
   },
   
   // Procedencia académica
   originIEMS: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'IEMS',
-    required: [true, 'La IEMS de procedencia es requerida']
+    ref: 'IEMS'
   },
   iemsCareer: String,
   iemsAverage: Number,
@@ -61,14 +50,10 @@ const prospectSchema = new mongoose.Schema({
   // Interés en TecNM
   firstChoiceIES: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'IES',
-    required: [true, 'La IES de primera opción es requerida']
+    ref: 'IES'
   },
   careerInterests: [{
-    career: {
-      type: String,
-      required: true
-    },
+    career: String,
     priority: {
       type: Number,
       min: 1,
@@ -93,8 +78,7 @@ const prospectSchema = new mongoose.Schema({
       'YouTube',
       'Open House',
       'Otro'
-    ],
-    required: true
+    ]
   },
   originCampaign: {
     type: mongoose.Schema.Types.ObjectId,

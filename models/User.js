@@ -4,12 +4,10 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'El nombre es requerido'],
     trim: true
   },
   lastName: {
     type: String,
-    required: [true, 'El apellido paterno es requerido'],
     trim: true
   },
   secondLastName: {
@@ -36,7 +34,7 @@ const userSchema = new mongoose.Schema({
       values: ['Admin Nacional', 'Admin IES', 'Operativo IES', 'Interesado'],
       message: '{VALUE} no es un rol válido'
     },
-    required: [true, 'El rol es requerido']
+    default: 'Interesado'
   },
   ies: {
     type: mongoose.Schema.Types.ObjectId,

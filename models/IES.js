@@ -21,14 +21,8 @@ const iesSchema = new mongoose.Schema({
     street: String,
     number: String,
     neighborhood: String,
-    municipality: {
-      type: String,
-      required: true
-    },
-    state: {
-      type: String,
-      required: true
-    },
+    municipality: String,
+    state: String,
     postalCode: String,
     country: {
       type: String,
@@ -52,10 +46,7 @@ const iesSchema = new mongoose.Schema({
     }
   },
   careers: [{
-    name: {
-      type: String,
-      required: true
-    },
+    name: String,
     code: String,
     modality: {
       type: String,
@@ -70,10 +61,7 @@ const iesSchema = new mongoose.Schema({
       type: String,
       enum: ['Matutino', 'Vespertino', 'Nocturno', 'Mixto']
     }],
-    capacityPerSemester: {
-      type: Number,
-      required: true
-    },
+    capacityPerSemester: Number,
     active: {
       type: Boolean,
       default: true
@@ -89,18 +77,13 @@ const iesSchema = new mongoose.Schema({
   branding: {
     primaryColor: {
       type: String,
-      default: '#003366',
-      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
+      default: '#003366'
     },
     secondaryColor: {
       type: String,
-      default: '#FFFFFF',
-      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
+      default: '#FFFFFF'
     },
-    accentColor: {
-      type: String,
-      match: [/^#[0-9A-Fa-f]{6}$/, 'Formato de color hexadecimal inválido']
-    },
+    accentColor: String,
     fontFamily: {
       type: String,
       default: 'Arial, sans-serif'
