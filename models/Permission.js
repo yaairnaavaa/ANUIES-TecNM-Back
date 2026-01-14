@@ -10,7 +10,6 @@ const permissionSchema = new mongoose.Schema({
   },
   displayName: {
     type: String,
-    required: [true, 'El nombre para mostrar es requerido'],
     trim: true
   },
   description: {
@@ -19,17 +18,14 @@ const permissionSchema = new mongoose.Schema({
   },
   module: {
     type: String,
-    enum: ['Usuarios', 'IES', 'IEMS', 'Campañas', 'Prospectos', 'Periodos', 'Reportes', 'Configuración', 'Sistema'],
-    required: true
+    enum: ['Usuarios', 'IES', 'IEMS', 'Campañas', 'Prospectos', 'Periodos', 'Reportes', 'Configuración', 'Sistema']
   },
   action: {
     type: String,
-    enum: ['create', 'read', 'update', 'delete', 'execute', 'export', 'import'],
-    required: true
+    enum: ['create', 'read', 'update', 'delete', 'execute', 'export', 'import']
   },
   resource: {
     type: String,
-    required: true,
     trim: true
   },
   conditions: {

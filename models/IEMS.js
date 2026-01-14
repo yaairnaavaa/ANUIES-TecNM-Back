@@ -15,22 +15,15 @@ const iemsSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['CBTis', 'CETis', 'CONALEP', 'Bachillerato General', 'Bachillerato Tecnológico', 'Telebachillerato', 'Preparatoria', 'Otro'],
-    required: true
+    enum: ['CBTis', 'CETis', 'CONALEP', 'Bachillerato General', 'Bachillerato Tecnológico', 'Telebachillerato', 'Preparatoria', 'Otro']
   },
   address: {
     street: String,
     number: String,
     neighborhood: String,
     locality: String,
-    municipality: {
-      type: String,
-      required: true
-    },
-    state: {
-      type: String,
-      required: true
-    },
+    municipality: String,
+    state: String,
     postalCode: String,
     country: {
       type: String,
@@ -53,10 +46,7 @@ const iemsSchema = new mongoose.Schema({
     }
   },
   educationalOffer: [{
-    career: {
-      type: String,
-      required: true
-    },
+    career: String,
     modality: {
       type: String,
       enum: ['Presencial', 'Mixta', 'Virtual'],

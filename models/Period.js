@@ -9,43 +9,22 @@ const periodSchema = new mongoose.Schema({
   },
   code: {
     type: String,
-    required: [true, 'El código del periodo es requerido'],
     unique: true,
     uppercase: true,
     trim: true
   },
-  academicYear: {
-    type: String,
-    required: [true, 'El año académico es requerido']
-  },
+  academicYear: String,
   semester: {
     type: String,
-    enum: ['Enero-Junio', 'Agosto-Diciembre', 'Intersemestral'],
-    required: true
+    enum: ['Enero-Junio', 'Agosto-Diciembre', 'Intersemestral']
   },
   dates: {
-    enrollmentStart: {
-      type: Date,
-      required: true
-    },
-    enrollmentEnd: {
-      type: Date,
-      required: true
-    },
-    classStart: {
-      type: Date,
-      required: true
-    },
-    classEnd: {
-      type: Date,
-      required: true
-    },
-    examPeriodStart: {
-      type: Date
-    },
-    examPeriodEnd: {
-      type: Date
-    }
+    enrollmentStart: Date,
+    enrollmentEnd: Date,
+    classStart: Date,
+    classEnd: Date,
+    examPeriodStart: Date,
+    examPeriodEnd: Date
   },
   recruitmentPhases: {
     prospecting: {
