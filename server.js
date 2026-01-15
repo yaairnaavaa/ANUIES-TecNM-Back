@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const connectDB = require("./config/database");
@@ -34,6 +35,9 @@ app.use(cors(corsOptions));
 
 // Logging
 app.use(morgan("dev"));
+
+// Cookie parser
+app.use(cookieParser());
 
 // Body parser
 app.use(express.json());

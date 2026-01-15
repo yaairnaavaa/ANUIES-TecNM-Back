@@ -95,7 +95,7 @@ userSchema.methods.getPublicData = function () {
     throw new Error("El usuario no tiene rol asignado");
   }
 
-  return {
+  const publicData = {
     id: this._id,
     firstName: this.firstName,
     lastName: this.lastName,
@@ -119,10 +119,20 @@ userSchema.methods.getPublicData = function () {
         category: p.category,
       })) || [],
 
-    ies: this.ies,
     active: this.active,
     createdAt: this.createdAt,
   };
+
+  // Solo agregar IES si existe (para roles que la requieren)
+  if (this.ies) {
+    publicData.ies = {
+      id: this.ies._id,
+      name: this.ies.name,
+      code: this.ies.code,
+    };
+  }
+
+  return publicData;
 };
 
 module.exports = mongoose.model("User", userSchema);

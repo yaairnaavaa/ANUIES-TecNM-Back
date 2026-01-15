@@ -2,6 +2,7 @@ const express = require('express');
 const {
   register,
   login,
+  logout,
   getMe,
   updatePassword
 } = require('../controllers/authController');
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post('/login', login);
 
 // Rutas protegidas
+router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
 router.put('/updatepassword', protect, updatePassword);
 

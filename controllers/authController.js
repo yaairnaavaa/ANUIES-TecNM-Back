@@ -83,10 +83,19 @@ exports.register = asyncHandler(async (req, res) => {
     })
     .populate("ies", "name code");
 
+  const token = generateToken(user._id);
+
+  // Configurar cookie con el token (httpOnly para seguridad)
+  res.cookie('anuies_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+  });
+
   res.status(201).json({
     success: true,
     data: populatedUser.getPublicData(),
-    token: generateToken(user._id),
   });
 });
 
@@ -161,10 +170,19 @@ exports.login = asyncHandler(async (req, res) => {
   user.lastAccess = new Date();
   await user.save({ validateBeforeSave: false });
 
+  const token = generateToken(user._id);
+
+  // Configurar cookie con el token (httpOnly para seguridad)
+  res.cookie('anuies_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+  });
+
   res.status(200).json({
     success: true,
     data: user.getPublicData(),
-    token: generateToken(user._id),
   });
 });
 
@@ -218,9 +236,36 @@ exports.updatePassword = asyncHandler(async (req, res) => {
   user.password = newPassword;
   await user.save();
 
+  const token = generateToken(user._id);
+
+  // Configurar cookie con el token (httpOnly para seguridad)
+  res.cookie('anuies_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+  });
+
   res.status(200).json({
     success: true,
     message: "Contraseña actualizada correctamente",
-    token: generateToken(user._id),
+  });
+});
+
+/**
+ * @desc    Cerrar sesión
+ * @route   POST /api/auth/logout
+ * @access  Private
+ */
+exports.logout = asyncHandler(async (req, res) => {
+  // Limpiar la cookie del token
+  res.cookie('anuies_token', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Sesión cerrada correctamente",
   });
 });
