@@ -101,9 +101,7 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
     query = query.where('firstChoiceIES').equals(req.query.firstChoiceIES);
   }
 
-  if (req.query.originIEMS) {
-    query = query.where('originIEMS').equals(req.query.originIEMS);
-  }
+
 
   if (req.query.contactChannel) {
     query = query.where('contactChannel').equals(req.query.contactChannel);
@@ -114,10 +112,9 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
   }
 
   const prospects = await query
-    .populate('originIEMS', 'name type address.municipality address.state')
     .populate('firstChoiceIES', 'name code')
     .populate('originCampaign', 'name type')
-    .populate('assignedTo', 'firstName lastName email')
+    // .populate('assignedTo', 'firstName lastName email')
     .sort({ createdAt: -1 });
 
   res.status(200).json({
@@ -132,10 +129,9 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
 // @access  Private
 exports.getProspectById = asyncHandler(async (req, res) => {
   const prospect = await Prospect.findById(req.params.id)
-    .populate('originIEMS', 'name type address contact')
     .populate('firstChoiceIES', 'name code careers contact')
     .populate('originCampaign', 'name type specificModality')
-    .populate('assignedTo', 'firstName lastName email phone');
+    // .populate('assignedTo', 'firstName lastName email phone');
 
   if (!prospect) {
     return res.status(404).json({
@@ -183,7 +179,7 @@ exports.assignProspect = asyncHandler(async (req, res) => {
     }
   }
 
-  prospect.assignedTo = req.body.assignedTo || req.user.id;
+  // prospect.assignedTo = req.body.assignedTo || req.user.id;
   await prospect.save();
 
   res.status(200).json({
