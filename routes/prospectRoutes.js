@@ -13,12 +13,15 @@ const { protect, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 // Todas las rutas públicas
+// Rutas públicas
 router.post('/register', registerProspect);
-router.get('/', getAllProspects);
-router.get('/:id', getProspectById);
 router.put('/:id/profile', updateProspectProfile);
-router.put('/:id/assign', assignProspect);
-router.put('/:id/observations', updateObservations);
-router.put('/:id/validate', validateProspect);
+
+// Rutas protegidas
+router.get('/', protect, getAllProspects);
+router.get('/:id', protect, getProspectById);
+router.put('/:id/assign', protect, assignProspect);
+router.put('/:id/observations', protect, updateObservations);
+router.put('/:id/validate', protect, validateProspect);
 
 module.exports = router;
