@@ -1,183 +1,160 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const prospectSchema = new mongoose.Schema({
-  // Datos personales
-  firstName: {
-    type: String,
-    trim: true
-  },
-  lastName: {
-    type: String,
-    trim: true
-  },
-  secondLastName: {
-    type: String,
-    trim: true
-  },
-  
-  // Datos de contacto
-  email: {
-    type: String,
-    lowercase: true,
-    trim: true
-  },
-  phone: {
-    landline: String,
-    mobile: String
-  },
-  
-  // Dirección
-  address: {
-    street: String,
-    number: String,
-    neighborhood: String,
-    locality: String,
-    municipality: String,
-    state: String,
-    postalCode: String
-  },
-  
-  // Procedencia académica
-  originIEMS: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'IEMS'
-  },
-  iemsCareer: String,
-  iemsAverage: Number,
-  currentSemester: Number,
-  estimatedGraduationDate: Date,
-  
-  // Interés en TecNM
-  firstChoiceIES: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'IES'
-  },
-  careerInterests: [{
-    career: String,
-    priority: {
+const prospectSchema = new mongoose.Schema(
+  {
+    // ======================
+    // DATOS PERSONALES
+    // ======================
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    birthDate: Date,
+
+    gender: {
+      type: String,
+      enum: ["Masculino", "Femenino", "Otro", "Prefiero no decir"],
+      default: "Prefiero no decir",
+    },
+
+    curp: {
+      type: String,
+      uppercase: true,
+      trim: true,
+    },
+
+    // ======================
+    // CONTACTO
+    // ======================
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    phone: {
+      mobile: {
+        type: String,
+        required: true,
+      },
+    },
+
+    // ======================
+    // INFORMACIÓN ACADÉMICA
+    // ======================
+    originIEMSName: {
+      type: String,
+      required: true,
+    },
+
+    currentSemester: String,
+
+    technicalMajor: String,
+
+    averageGrade: {
       type: Number,
-      min: 1,
-      max: 3
-    }
-  }],
-  
-  // Canal de captación
-  contactChannel: {
-    type: String,
-    enum: [
-      'Conferencia',
-      'Visita a IEMS',
-      'Facebook',
-      'Instagram',
-      'TikTok',
-      'WhatsApp',
-      'Feria universitaria',
-      'Familiar o amigo',
-      'Docente de IEMS',
-      'Sitio web',
-      'YouTube',
-      'Open House',
-      'Otro'
-    ]
-  },
-  originCampaign: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Campaign'
-  },
-  
-  // Clasificación del interés
-  classification: {
-    type: String,
-    enum: {
-      values: ['Curioso', 'Prospecto', 'Aspirante Activo'],
-      message: '{VALUE} no es una clasificación válida'
+      min: 0,
+      max: 10,
     },
-    default: 'Curioso'
-  },
-  
-  // Redes sociales e intereses
-  socialMedia: {
-    facebook: String,
-    instagram: String,
-    tiktok: String,
-    twitter: String
-  },
-  personalInterests: [String],
-  
-  // Estado del proceso
-  processStatus: {
-    registrationComplete: {
-      type: Boolean,
-      default: false
-    },
-    profileValidated: {
-      type: Boolean,
-      default: false
-    },
-    readNotifications: [{
-      date: Date,
-      message: String
-    }],
-    lastInteraction: Date
-  },
-  
-  // Seguimiento
-  observations: String,
-  assignedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  
-  active: {
-    type: Boolean,
-    default: true
-  }
-}, {
-  timestamps: true
-});
 
-// Índices
+    estimatedGraduationDate: Date,
+
+    // ======================
+    // INTERÉS ACADÉMICO
+    // ======================
+    firstChoiceIES: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "IES",
+      required: true,
+    },
+
+    careerInterests: [
+      {
+        career: {
+          type: String,
+          required: true,
+        },
+        priority: {
+          type: Number,
+          min: 1,
+          max: 3,
+        },
+      },
+    ],
+
+    interestedShift: [
+      {
+        type: String,
+        enum: ["Matutino", "Vespertino", "Nocturno"],
+      },
+    ],
+
+    // ======================
+    // MARKETING
+    // ======================
+    contactChannel: {
+      type: String,
+      enum: [
+        "Feria universitaria",
+        "Visita a IEMS",
+        "Facebook",
+        "Instagram",
+        "TikTok",
+        "Familiar o amigo",
+        "Otro",
+      ],
+    },
+
+    originCampaign: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Campaign",
+    },
+
+    // ======================
+    // ESTADO
+    // ======================
+    status: {
+      type: String,
+      default: "active",
+    },
+    processStatus: {
+      type: Object,
+      default: () => ({
+        registrationComplete: false,
+        profileValidated: false,
+        readNotifications: [],
+        lastInteraction: null,
+      }),
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 prospectSchema.index({ email: 1 });
-prospectSchema.index({ originIEMS: 1 });
-prospectSchema.index({ firstChoiceIES: 1 });
-prospectSchema.index({ classification: 1 });
-prospectSchema.index({ contactChannel: 1 });
-prospectSchema.index({ active: 1 });
 
-// Virtual para nombre completo
-prospectSchema.virtual('fullName').get(function() {
-  return `${this.firstName} ${this.lastName} ${this.secondLastName || ''}`.trim();
-});
-
-// Método para avanzar clasificación
-prospectSchema.methods.promoteClassification = function() {
-  if (this.classification === 'Curioso' && this.processStatus.registrationComplete) {
-    this.classification = 'Prospecto';
-  } else if (this.classification === 'Prospecto' && this.processStatus.profileValidated) {
-    this.classification = 'Aspirante Activo';
-  }
-};
-
-// Método para verificar si está completo el registro
-prospectSchema.methods.verifyRegistrationComplete = function() {
+prospectSchema.methods.verifyRegistrationComplete = function () {
   const requiredFields = [
     this.firstName,
     this.lastName,
     this.email,
-    this.phone.mobile,
-    this.address.postalCode,
+    this.phone?.mobile,
+    this.address?.postalCode,
     this.originIEMS,
     this.firstChoiceIES,
-    this.careerInterests.length > 0
+    Array.isArray(this.careerInterests) && this.careerInterests.length > 0,
   ];
-  
-  this.processStatus.registrationComplete = requiredFields.every(field => !!field);
+
+  this.processStatus.registrationComplete = requiredFields.every(Boolean);
   return this.processStatus.registrationComplete;
 };
 
-// Pre-save hook
-prospectSchema.pre('save', async function() {
-  this.processStatus.lastInteraction = new Date();
-});
-
-module.exports = mongoose.model('Prospect', prospectSchema);
+module.exports = mongoose.model("Prospect", prospectSchema);
