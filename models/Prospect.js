@@ -50,6 +50,11 @@ const prospectSchema = new mongoose.Schema(
       required: true,
     },
 
+    originIEMS: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'IEMS'
+    },
+
     currentSemester: String,
 
     technicalMajor: String,

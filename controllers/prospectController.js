@@ -113,6 +113,7 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
 
   const prospects = await query
     .populate('firstChoiceIES', 'name code')
+    .populate('originIEMS', 'name code')
     .populate('originCampaign', 'name type')
     // .populate('assignedTo', 'firstName lastName email')
     .sort({ createdAt: -1 });
@@ -130,6 +131,7 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
 exports.getProspectById = asyncHandler(async (req, res) => {
   const prospect = await Prospect.findById(req.params.id)
     .populate('firstChoiceIES', 'name code careers contact')
+    .populate('originIEMS', 'name code')
     .populate('originCampaign', 'name type specificModality')
     // .populate('assignedTo', 'firstName lastName email phone');
 
