@@ -37,6 +37,8 @@ const iesSchema = new mongoose.Schema({
       trim: true
     },
     website: String,
+    responsable: String, // Responsable/Contacto principal
+    nombreDirector: String, // Nombre del director de la institución
     socialMedia: {
       facebook: String,
       instagram: String,
