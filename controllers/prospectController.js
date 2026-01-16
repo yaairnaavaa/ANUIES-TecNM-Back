@@ -100,12 +100,12 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 
 // @desc    Obtener todos los interesados
 // @route   GET /api/prospects
-// @access  Private (Admin y Operativos)
+// @access  Public (temporalmente para Vercel)
 exports.getAllProspects = asyncHandler(async (req, res) => {
   let query = Prospect.find();
 
-  // Filtrar por IES si el usuario es Admin IES u Operativo
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
+  // Filtrar por IES si el usuario está autenticado y es Admin IES u Operativo
+  if (req.user && ['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     query = query.where('firstChoiceIES').equals(req.user.ies);
   }
 
@@ -144,7 +144,7 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
 
 // @desc    Obtener interesado por ID
 // @route   GET /api/prospects/:id
-// @access  Private
+// @access  Public (temporalmente para Vercel)
 exports.getProspectById = asyncHandler(async (req, res) => {
   const prospect = await Prospect.findById(req.params.id)
     .populate('firstChoiceIES', 'name code careers contact')
@@ -159,8 +159,8 @@ exports.getProspectById = asyncHandler(async (req, res) => {
     });
   }
 
-  // Verificar permisos
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
+  // Verificar permisos solo si está autenticado
+  if (req.user && ['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     if (req.user.ies.toString() !== prospect.firstChoiceIES._id.toString()) {
       return res.status(403).json({
         success: false,

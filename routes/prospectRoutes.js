@@ -16,10 +16,10 @@ const router = express.Router();
 // Rutas públicas
 router.post('/register', registerProspect);
 router.put('/:id/profile', updateProspectProfile);
+router.get('/', getAllProspects); // Temporalmente pública para Vercel
+router.get('/:id', getProspectById); // Temporalmente pública para Vercel
 
 // Rutas protegidas
-router.get('/', protect, getAllProspects);
-router.get('/:id', protect, getProspectById);
 router.put('/:id/assign', protect, assignProspect);
 router.put('/:id/observations', protect, updateObservations);
 router.put('/:id/validate', protect, validateProspect);

@@ -5,17 +5,24 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
   let token;
 
+  // Log para debug en producción
+  console.log('🔍 Headers:', req.headers);
+  console.log('🍪 Cookies:', req.cookies);
+
   // Primero intentar obtener token de cookies (httpOnly)
   if (req.cookies && req.cookies.anuies_token) {
     token = req.cookies.anuies_token;
+    console.log('✅ Token obtenido de cookie');
   }
   // Si no está en cookies, verificar headers (para compatibilidad temporal)
   else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+    console.log('✅ Token obtenido de header');
   }
 
   // Verificar que el token existe
   if (!token) {
+    console.log('❌ No se encontró token');
     return res.status(401).json({
       success: false,
       message: 'No estás autorizado para acceder a esta ruta'
