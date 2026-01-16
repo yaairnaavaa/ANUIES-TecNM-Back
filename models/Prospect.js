@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { validateCURP } = require('../utils/curpValidator');
 
 const prospectSchema = new mongoose.Schema(
   {
@@ -23,6 +24,13 @@ const prospectSchema = new mongoose.Schema(
       type: String,
       uppercase: true,
       trim: true,
+      validate: {
+        validator: function(v) {
+          if (!v) return true; // CURP es opcional
+          return validateCURP(v);
+        },
+        message: 'CURP no tiene un formato válido'
+      }
     },
 
     // ======================

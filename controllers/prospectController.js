@@ -1,5 +1,6 @@
 const Prospect = require('../models/Prospect');
 const asyncHandler = require('../middleware/asyncHandler');
+const { validateCURP } = require('../utils/curpValidator');
 
 // @desc    Registrar nuevo interesado (público)
 // @route   POST /api/prospects/register
@@ -12,6 +13,14 @@ exports.registerProspect = asyncHandler(async (req, res) => {
     return res.status(400).json({
       success: false,
       message: 'El email ya está registrado'
+    });
+  }
+
+  // Validar CURP si se proporciona
+  if (req.body.curp && !validateCURP(req.body.curp)) {
+    return res.status(400).json({
+      success: false,
+      message: 'El formato de la CURP no es válido'
     });
   }
 
@@ -49,11 +58,19 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 
   // Actualizar campos permitidos
   const allowedFields = [
-    'firstName', 'lastName', 'secondLastName',
+    'firstName', 'lastName', 'secondLastName', 'curp',
     'phone', 'address', 'iemsCareer', 'iemsAverage',
     'currentSemester', 'estimatedGraduationDate',
     'careerInterests', 'socialMedia', 'personalInterests'
   ];
+
+  // Validar CURP si se está actualizando
+  if (req.body.curp && !validateCURP(req.body.curp)) {
+    return res.status(400).json({
+      success: false,
+      message: 'El formato de la CURP no es válido'
+    });
+  }
 
   allowedFields.forEach(field => {
     if (req.body[field] !== undefined) {
