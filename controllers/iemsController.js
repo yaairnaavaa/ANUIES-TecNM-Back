@@ -162,62 +162,52 @@ exports.bulkInsertExcelIEMS = asyncHandler(async (req, res) => {
   const file = req.file;
 
   if (!file) {
-    return res.status(500).json({});
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid csv file",
+    });
   }
 
+  const data = await fileHandler.CSVtoJson(file.path);
+
+  const restructuredData = data.map((d) => ({
+    code: d.CCT,
+    name: d.NOMBRE_DEL_PLANTEL,
+    type: d.SUBSISTEMA ?? "Otro",
+    address: {
+      state: d.ENTIDAD,
+      municipality: d.MUNICIPIO,
+      locality: d.LOCALIDAD,
+    },
+    cct: d.CCT,
+  }));
+
+  let IEMSInsertados = [];
+  let IEMSDuplicados = [];
+
   try {
-    const data = await fileHandler.CSVtoJson(file.path);
-
-    const restructuredData = data.map((d) => ({
-      code: d.CCT,
-      name: d.NOMBRE_DEL_PLANTEL,
-      type: d.SUBSISTEMA || "Otro",
-      address: {
-        state: d.ENTIDAD,
-        municipality: d.MUNICIPIO,
-        locality: d.LOCALIDAD,
-      },
-      cct: d.CCT,
-    }));
-
-    const IEMSInsertados = await IEMS.insertMany(restructuredData, {
+    IEMSInsertados = await IEMS.insertMany(restructuredData, {
       ordered: false,
     });
-
-    res.status(201).json({
-      status: "sucess",
-      data: {
-        IEMSInsertados,
-        duplicados: [],
-      },
-    });
   } catch (error) {
-    const duplicados = [];
-    const IEMSInsertados = error.insertedDocs || [];
+    IEMSInsertados = error.insertedDocs || [];
 
     if (error.writeErrors) {
       for (const e of error.writeErrors) {
         if (e.err.code === 11000) {
-          duplicados.push({
+          IEMSDuplicados.push({
             name: e.err.op.name,
             code: e.err.op.cct,
           });
         }
       }
     }
-
-    res.status(201).json({
-      status: "sucess",
-      data: {
-        IEMSInsertados,
-        duplicados,
-      },
-    });
   }
-  //2) Guardarlo en tempFiles/
-  //3) Verificar contenido
-  //4) Obtener contenido
-  //5) Transction mongoose
-  //6) Summary (cuantos ingresó y cuantos no)
-  //7) Mandar respuesta
+  res.status(201).json({
+    status: "sucess",
+    data: {
+      IEMSInsertados,
+      IEMSDuplicados,
+    },
+  });
 });

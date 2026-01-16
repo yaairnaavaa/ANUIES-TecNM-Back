@@ -127,6 +127,7 @@ const iemsSchema = new mongoose.Schema(
     cct: {
       type: String,
       required: [true, "CCT REQUIRED"],
+      unique: true,
     },
     notes: String,
   },
