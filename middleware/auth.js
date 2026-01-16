@@ -26,8 +26,11 @@ exports.protect = async (req, res, next) => {
     // Verificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Buscar el usuario por ID
-    req.user = await User.findById(decoded.id).select('-password');
+    // Buscar el usuario por ID y poblar role e ies
+    req.user = await User.findById(decoded.id)
+      .select('-password')
+      .populate('role')
+      .populate('ies', 'name code');
 
     if (!req.user) {
       return res.status(401).json({

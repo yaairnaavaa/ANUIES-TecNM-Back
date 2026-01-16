@@ -86,10 +86,11 @@ exports.register = asyncHandler(async (req, res) => {
   const token = generateToken(user._id);
 
   // Configurar cookie con el token (httpOnly para seguridad)
+  // sameSite: 'none' permite cookies cross-origin (necesario para Vercel)
   res.cookie('anuies_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   });
 
@@ -239,10 +240,11 @@ exports.updatePassword = asyncHandler(async (req, res) => {
   const token = generateToken(user._id);
 
   // Configurar cookie con el token (httpOnly para seguridad)
+  // sameSite: 'none' permite cookies cross-origin (necesario para Vercel)
   res.cookie('anuies_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   });
 
@@ -261,6 +263,8 @@ exports.logout = asyncHandler(async (req, res) => {
   // Limpiar la cookie del token
   res.cookie('anuies_token', '', {
     httpOnly: true,
+    secure: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     expires: new Date(0),
   });
 

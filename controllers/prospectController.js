@@ -105,7 +105,7 @@ exports.getAllProspects = asyncHandler(async (req, res) => {
   let query = Prospect.find();
 
   // Filtrar por IES si el usuario es Admin IES u Operativo
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     query = query.where('firstChoiceIES').equals(req.user.ies);
   }
 
@@ -160,7 +160,7 @@ exports.getProspectById = asyncHandler(async (req, res) => {
   }
 
   // Verificar permisos
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     if (req.user.ies.toString() !== prospect.firstChoiceIES._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -189,7 +189,7 @@ exports.assignProspect = asyncHandler(async (req, res) => {
   }
 
   // Verificar permisos
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     if (req.user.ies.toString() !== prospect.firstChoiceIES.toString()) {
       return res.status(403).json({
         success: false,
@@ -222,7 +222,7 @@ exports.updateObservations = asyncHandler(async (req, res) => {
   }
 
   // Verificar permisos
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     if (req.user.ies.toString() !== prospect.firstChoiceIES.toString()) {
       return res.status(403).json({
         success: false,
@@ -255,7 +255,7 @@ exports.validateProspect = asyncHandler(async (req, res) => {
   }
 
   // Verificar permisos
-  if (['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+  if (['Admin IES', 'Operativo IES'].includes(req.user.role.name)) {
     if (req.user.ies.toString() !== prospect.firstChoiceIES.toString()) {
       return res.status(403).json({
         success: false,
