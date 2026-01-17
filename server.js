@@ -69,7 +69,7 @@ require("./models/MenuPermission");
 require("./models/Role");
 require("./models/User");
 require("./models/IES");
-require("./models/IEMS"); // si existe
+require("./src/modules/EscuelasMediaSuperior/IEMS.model"); // si existe
 require("./models/Period"); // si existe
 require("./models/Campaign"); // si existe
 require("./models/Prospect"); // si existe

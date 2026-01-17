@@ -41,6 +41,7 @@ const iemsSchema = new mongoose.Schema(
         "BTED",
         "BACHPART",
         "OCECYTE",
+        "CBTis",
       ],
     },
     address: {
