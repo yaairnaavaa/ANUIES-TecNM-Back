@@ -31,7 +31,7 @@ class IEMS_Repository {
   async getIEMSById(id) {
     return await IEMS.findById(id).populate(
       "linkage.directPassAgreements.ies",
-      "name code"
+      "name code",
     );
   }
 
@@ -40,10 +40,14 @@ class IEMS_Repository {
   }
 
   async updateIEMS(id, data) {
-    return await IEMS.findByIdAndUpdate(id, data);
+    return await IEMS.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async deactivateIEMS(id) {}
+  async deactivateIEMS(id) {
+    return await IEMS.findByIdAndUpdate(id, {
+      active: false,
+    });
+  }
 }
 
 module.exports = IEMS_Repository;

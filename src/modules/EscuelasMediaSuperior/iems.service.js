@@ -33,8 +33,16 @@ class IEMS_Service {
     throw new Error("Error updating. Please try again later");
   }
 
-  async deactivateIEMS(id){
+  async deactivateIEMS(id) {
+    const deactivatedIEMS = await this.IEMS_repository.deactivateIEMS(id);
 
+    if (deactivatedIEMS) return deactivatedIEMS;
+
+    const existsIEMS = await this.IEMS_repository.getIEMSById(id);
+
+    if (!existsIEMS) throw new Error(`IEMS con id: ${id} no encontrado`);
+
+    throw new Error("Error al desactivar. Intenta mas tarde");
   }
 }
 
