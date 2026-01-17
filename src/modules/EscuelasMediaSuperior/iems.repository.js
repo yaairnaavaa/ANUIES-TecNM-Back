@@ -2,7 +2,7 @@ const IEMS = require("./IEMS.model");
 
 class IEMS_Repository {
   async getAllIEMS(queryObject) {
-    const { state, municipality, type, active } = queryObject;
+    const { state, municipality, type, active } = queryObject || null;
 
     let query = IEMS.find();
 

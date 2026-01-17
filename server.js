@@ -58,8 +58,8 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/roles", require("./routes/roleRoutes"));
 app.use("/api/permissions", require("./routes/permissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
-app.use("/api/ies", require("./routes/iesRoutes"));
-app.use("/api/iems", require("./routes/iemsRoutes"));
+app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));
+app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));
 app.use("/api/campaigns", require("./routes/campaignRoutes"));
 app.use("/api/prospects", require("./routes/prospectRoutes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
@@ -68,8 +68,8 @@ app.use("/api/prospects", require("./routes/prospectRoutes"));
 require("./models/MenuPermission");
 require("./models/Role");
 require("./models/User");
-require("./models/IES");
-require("./src/modules/EscuelasMediaSuperior/IEMS.model"); // si existe
+// require("./models/IES");
+// require("./src/modules/EscuelasMediaSuperior/IEMS.model"); // si existe
 require("./models/Period"); // si existe
 require("./models/Campaign"); // si existe
 require("./models/Prospect"); // si existe
