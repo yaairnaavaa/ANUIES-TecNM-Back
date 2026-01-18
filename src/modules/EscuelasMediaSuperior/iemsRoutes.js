@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { protect, authorize } = require("../../../middleware/auth.js");
+const { protect, authorize } = require("../../middleware/auth.js");
 
 const { fileHandler, IEMS_controller } = require("../../../bootstrap.js");
 

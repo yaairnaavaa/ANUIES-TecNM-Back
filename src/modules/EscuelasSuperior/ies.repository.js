@@ -25,6 +25,35 @@ class IES_Repository {
     return await query.sort({ name: 1 });
   }
 
+  async getCarrerasDeIES(id) {
+    return await IES.findById(id).select("careers -_id");
+  }
+
+  async deactivateCarreraDeIES(iesId, carreraId) {
+    return await IES.findOneAndUpdate(
+      {
+        _id: iesId,
+        "careers._id": `${carreraId}`,
+      },
+      {
+        $set: {
+          "careers.$.active": false,
+        },
+      },
+      {
+        new: true,
+        runValidators: false,
+      },
+    );
+  }
+
+  async getCarreraById(iesId, carreraId) {
+    return await IES.findOne({
+      _id: iesId,
+      "careers._id": `${carreraId}`,
+    });
+  }
+
   async getIESById(id) {
     return await IES.findById(id);
   }

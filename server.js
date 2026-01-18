@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const connectDB = require("./config/database");
-const errorHandler = require("./middleware/errorHandler");
+const errorHandler = require("./src/middleware/errorHandler");
 
 // Conectar a la base de datos
 connectDB();
@@ -60,19 +60,16 @@ app.use("/api/permissions", require("./routes/permissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
 app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));
 app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));
-app.use("/api/campaigns", require("./routes/campaignRoutes"));
+app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
 app.use("/api/prospects", require("./routes/prospectRoutes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
-require("./models/MenuPermission");
-require("./models/Role");
-require("./models/User");
-// require("./models/IES");
-// require("./src/modules/EscuelasMediaSuperior/IEMS.model"); // si existe
-require("./models/Period"); // si existe
-require("./models/Campaign"); // si existe
-require("./models/Prospect"); // si existe
+// require("./models/MenuPermission");
+// require("./models/Role");
+// require("./models/User");
+// require("./models/Period"); // si existe
+// require("./models/Prospect"); // si existe
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

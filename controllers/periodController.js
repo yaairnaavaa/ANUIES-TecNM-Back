@@ -1,5 +1,5 @@
 const Period = require('../models/Period');
-const asyncHandler = require('../middleware/asyncHandler');
+const asyncHandler = require('./../src/middleware/asyncHandler');
 
 // @desc    Obtener todos los periodos
 // @route   GET /api/periods

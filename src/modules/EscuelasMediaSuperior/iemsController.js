@@ -1,4 +1,4 @@
-const asyncHandler = require("../../../middleware/asyncHandler.js");
+const asyncHandler = require("../../middleware/asyncHandler.js");
 // const IEMS = require("./IEMS.model.js");
 // const { fileHandler } = require("../../../bootstrap.js");
 

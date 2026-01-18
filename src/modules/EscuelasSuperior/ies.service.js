@@ -12,6 +12,38 @@ class IES_Service {
     return await this.IES_repository.getAllIES(queryObject);
   }
 
+  async getCarrerasDeIES(id) {
+    return await this.IES_repository.getCarrerasDeIES(id);
+  }
+
+  async deactivateCarreraDeIES(iesId, carreraId) {
+    const deactivatedCareer = await this.IES_repository.deactivateCarreraDeIES(
+      iesId,
+      carreraId,
+    );
+
+    if (deactivatedCareer) return true;
+
+    await this.getIESById(iesId);
+
+    await this.getCarreraById(iesId, carreraId);
+
+    throw new Error(
+      "No se pudo desactivar la carrera por el momento. Intenta mas tarde",
+    );
+  }
+
+  async getCarreraById(iesId, carreraId) {
+    const carrera = await this.IES_repository.getCarreraById(iesId, carreraId);
+
+    if (!carrera)
+      throw new Error(
+        `Carrera para la IES: ${iesId} con el id: ${carreraId} no existe`,
+      );
+
+    return carrera;
+  }
+
   async getIESById(id) {
     const ies = await this.IES_repository.getIESById(id);
 

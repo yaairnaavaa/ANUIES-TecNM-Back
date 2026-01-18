@@ -1,6 +1,6 @@
-const User = require("../models/User");
+const User = require("./../models/User");
 const generateToken = require("../utils/generateToken");
-const asyncHandler = require("../middleware/asyncHandler");
+const asyncHandler = require("./../src/middleware/asyncHandler");
 
 /**
  * @desc    Registrar nuevo usuario

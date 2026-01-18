@@ -1,5 +1,5 @@
 const Prospect = require('../models/Prospect');
-const asyncHandler = require('../middleware/asyncHandler');
+const asyncHandler = require('./../src/middleware/asyncHandler');
 
 // @desc    Registrar nuevo interesado (público)
 // @route   POST /api/prospects/register

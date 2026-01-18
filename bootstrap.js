@@ -1,3 +1,6 @@
+const CampaignRepository = require("./src/modules/Campaigns/campaign.repository.js");
+const CampaignController = require("./src/modules/Campaigns/campaignController.js");
+const CampaignService = require("./src/modules/Campaigns/campaing.service.js");
 const IEMS_Repository = require("./src/modules/EscuelasMediaSuperior/iems.repository.js");
 const IEMS_Service = require("./src/modules/EscuelasMediaSuperior/iems.service.js");
 const IEMS_Controller = require("./src/modules/EscuelasMediaSuperior/iemsController.js");
@@ -11,6 +14,7 @@ const IES_Controller = require("./src/modules/EscuelasSuperior/iesController.js"
 //repositories
 const IEMS_repository = new IEMS_Repository();
 const IES_repository = new IES_Repository();
+const campaignRepository = new CampaignRepository();
 
 //IEMS BOOTSTRAP
 const IEMS_service = new IEMS_Service(IEMS_repository);
@@ -19,3 +23,7 @@ exports.IEMS_controller = new IEMS_Controller(IEMS_service);
 //IES BOOTRSTRAP
 const IES_service = new IES_Service(IES_repository);
 exports.IES_controller = new IES_Controller(IES_service);
+
+//CAMPAINGS BOOTRAP
+const campaignService = new CampaignService(campaignRepository);
+exports.campaignContrller = new CampaignController(campaignService);

@@ -1,4 +1,4 @@
-const asyncHandler = require("./../../../middleware/asyncHandler");
+const asyncHandler = require("../../middleware/asyncHandler");
 
 class IES_Controller {
   constructor(IES_service) {
@@ -15,6 +15,33 @@ class IES_Controller {
       success: true,
       count: allIES.length,
       data: allIES,
+    });
+  });
+
+  // // @desc    Obtener todas las carreras de una IES
+  // // @route   GET /api/ies:id/carreras
+  // // @access  Public (con filtros si está autenticado)
+  getCarrerasDeIES = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const carreras = await this.IES_service.getCarrerasDeIES(id);
+
+    res.status(200).json({
+      success: true,
+      count: carreras.length,
+      data: carreras,
+    });
+  });
+
+  // // @desc    Desactivar una carreras de una IES
+  // // @route   DELETE /api/ies:iesId/carreras/:carreraId
+  // // @access  Public (con filtros si está autenticado)
+  deactivateCarreraDeIES = asyncHandler(async (req, res) => {
+    const { iesId, carreraId } = req.params;
+    await this.IES_service.deactivateCarreraDeIES(iesId, carreraId);
+
+    res.status(200).json({
+      success: true,
+      message: `Carrera desactivada`,
     });
   });
 

@@ -1,5 +1,5 @@
 const Role = require('../models/Role');
-const asyncHandler = require('../middleware/asyncHandler');
+const asyncHandler = require('./../src/middleware/asyncHandler');
 
 // @desc    Obtener todos los roles
 // @route   GET /api/roles
