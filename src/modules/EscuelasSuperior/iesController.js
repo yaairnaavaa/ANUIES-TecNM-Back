@@ -32,16 +32,23 @@ class IES_Controller {
     });
   });
 
-  // // @desc    Desactivar una carreras de una IES
-  // // @route   DELETE /api/ies:iesId/carreras/:carreraId
+  // // @desc    Actualizar una carreras de una IES
+  // // @route   patch /api/ies:iesId/carreras/:carreraNombre
   // // @access  Public (con filtros si está autenticado)
-  deactivateCarreraDeIES = asyncHandler(async (req, res) => {
-    const { iesId, carreraId } = req.params;
-    await this.IES_service.deactivateCarreraDeIES(iesId, carreraId);
+  actualizarCarreraDeIES = asyncHandler(async (req, res) => {
+    const { iesId, carreraNombre } = req.params;
+    const data = req.body;
+
+    const updatedCarrera = await this.IES_service.actualizarCarreraDeIES(
+      iesId,
+      carreraNombre,
+      data,
+    );
 
     res.status(200).json({
       success: true,
-      message: `Carrera desactivada`,
+      message: `Carrera actualizada`,
+      data: updatedCarrera,
     });
   });
 

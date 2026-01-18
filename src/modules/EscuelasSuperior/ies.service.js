@@ -16,17 +16,29 @@ class IES_Service {
     return await this.IES_repository.getCarrerasDeIES(id);
   }
 
-  async deactivateCarreraDeIES(iesId, carreraId) {
+  async actualizarCarreraDeIES(iesId, carreraNombre, data) {
+    if (Object.keys(data).length === 1 && typeof data.active === "boolean") {
+      const estado = data.active;
+      return await this.deactivateCarreraDeIES(iesId, carreraNombre, estado);
+    }
+
+    // throw new Error(
+    //   "No se pudo actualizar la carrera por el momento. Intenta mas tarde",
+    // );
+  }
+
+  async deactivateCarreraDeIES(iesId, carreraNombre, estado) {
     const deactivatedCareer = await this.IES_repository.deactivateCarreraDeIES(
       iesId,
-      carreraId,
+      carreraNombre,
+      estado,
     );
 
-    if (deactivatedCareer) return true;
+    if (deactivatedCareer) return estado;
 
     await this.getIESById(iesId);
 
-    await this.getCarreraById(iesId, carreraId);
+    await this.getCarreraByName(iesId, carreraNombre);
 
     throw new Error(
       "No se pudo desactivar la carrera por el momento. Intenta mas tarde",
@@ -39,6 +51,20 @@ class IES_Service {
     if (!carrera)
       throw new Error(
         `Carrera para la IES: ${iesId} con el id: ${carreraId} no existe`,
+      );
+
+    return carrera;
+  }
+
+  async getCarreraByName(iesId, carreraNombre) {
+    const carrera = await this.IES_repository.getCarreraByName(
+      iesId,
+      carreraNombre,
+    );
+
+    if (!carrera)
+      throw new Error(
+        `Carrera con nombre ${carreraNombre} para la IES: ${iesId} no existe`,
       );
 
     return carrera;

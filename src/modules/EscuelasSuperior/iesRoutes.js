@@ -24,7 +24,7 @@ router
 //CUSTOM ROUTES
 router.route("/:id/carreras").get(IES_controller.getCarrerasDeIES);
 router
-  .route("/:iesId/carreras/:carreraId")
-  .delete(IES_controller.deactivateCarreraDeIES);
+  .route("/:iesId/carreras/:carreraNombre")
+  .patch(IES_controller.actualizarCarreraDeIES);
 
 module.exports = router;
