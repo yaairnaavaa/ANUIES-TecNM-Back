@@ -13,8 +13,12 @@ const router = express.Router();
 // router.put('/:id', updateIES);
 // router.delete('/:id', deleteIES);
 
-router.route("/").get(IES_controller.getAllIES);
+router.route("/").get(IES_controller.getAllIES).post(IES_controller.createIES);
 
-router.route("/:id").get(IES_controller.getIESById);
+router
+  .route("/:id")
+  .get(IES_controller.getIESById)
+  .patch(IES_controller.updateIES)
+  .delete(IES_controller.deactivateIES);
 
 module.exports = router;

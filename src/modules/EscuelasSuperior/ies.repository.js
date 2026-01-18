@@ -17,14 +17,16 @@ class IES_Repository {
     //   query = query.where("active").equals(active === "true");
     // }
 
+    //   // Si es Admin IES u Operativo, solo puede ver su IES
+    //   if (req.user && ['Admin IES', 'Operativo IES'].includes(req.user.role)) {
+    //     query = query.where('_id').equals(req.user.ies);
+    //   }
+
     return await query.sort({ name: 1 });
   }
 
   async getIESById(id) {
-    return await IES.findById(id).populate(
-      "linkage.directPassAgreements.ies",
-      "name code",
-    );
+    return await IES.findById(id);
   }
 
   async createIES(data) {

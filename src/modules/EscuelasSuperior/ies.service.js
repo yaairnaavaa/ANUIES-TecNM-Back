@@ -13,15 +13,70 @@ class IES_Service {
   }
 
   async getIESById(id) {
-    return await this.IES_repository.findById(id);
+    const ies = await this.IES_repository.getIESById(id);
+
+    if (!ies) throw new Error(`IES con id: ${id} no existe`);
+
+    // Verificar permisos
+    // if (["Admin IES", "Operativo IES"].includes(req.user.role)) {
+    //   if (req.user.ies.toString() !== ies._id.toString()) {
+    //     throw new Error("No tienes permiso para ver esta IES");
+    //   }
+    // }
+
+    return ies;
   }
 
   async createIES(data) {
-    return await this.IES_repository.create(data);
+    return await this.IES_repository.createIES(data);
   }
 
   async updateIES(id, data) {
-    return await this.IES_repository.updateIES(id, data);
+    // // Verificar permisos
+    // if (req.user.role === 'Admin IES') {
+    //   if (req.user.ies.toString() !== ies._id.toString()) {
+    //     return res.status(403).json({
+    //       success: false,
+    //       message: 'No tienes permiso para actualizar esta IES'
+    //     });
+    //   }
+
+    //   // Admin IES no puede cambiar ciertos campos críticos
+    //   delete req.body.code;
+    //   delete req.body.active;
+    // }
+
+    const ies = await this.IES_repository.getIESById(id);
+
+    if (!ies) throw new Error(`IES con id: ${id} no existe`);
+
+    // // console.log(Object.keys(data));
+    // // console.log(Object.entries(data));
+
+    // const keys = Object.keys(data);
+
+    // let keyObjects;
+
+    // // keys.forEach((key) => {
+    // //   //  console.log(data[key])
+    // // });
+
+    // Object.entries(data).forEach((entrie) => {
+    //   console.log(entrie);
+    // });
+
+    // console.log(keyObjects);
+
+    // Object.keys()
+    // const updatedIes = await this.IES_repository.updateIES(id, data);
+
+    // if (updatedIes) return updatedIes;
+
+    // const iesExists = await this.IES_repository.getIESById(id);
+
+    // if (!iesExists) throw new Error(`IES con id: ${id} no existe`);
+
+    throw new Error("No se pudo actualizar el IES. Intenta mas tarde");
   }
 
   async deactivateIES(id) {
