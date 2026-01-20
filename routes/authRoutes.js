@@ -5,7 +5,7 @@ const {
   logout,
   getMe,
   updatePassword,
-} = require("../src/modules/Auth/authController");
+} = require("./../controllers/authController");
 
 const { protect, authorize } = require("./../src/middleware/auth");
 
