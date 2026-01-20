@@ -1,31 +1,34 @@
-const jwt = require('jsonwebtoken');
-const User = require('../modules/Users/User.model');
+const jwt = require("jsonwebtoken");
+const User = require("../../models/User");
 
 // Middleware para proteger rutas
 exports.protect = async (req, res, next) => {
   let token;
 
   // Log para debug en producción
-  console.log('🔍 Headers:', req.headers);
-  console.log('🍪 Cookies:', req.cookies);
+  console.log("🔍 Headers:", req.headers);
+  console.log("🍪 Cookies:", req.cookies);
 
   // Primero intentar obtener token de cookies (httpOnly)
   if (req.cookies && req.cookies.anuies_token) {
     token = req.cookies.anuies_token;
-    console.log('✅ Token obtenido de cookie');
+    console.log("✅ Token obtenido de cookie");
   }
   // Si no está en cookies, verificar headers (para compatibilidad temporal)
-  else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-    console.log('✅ Token obtenido de header');
+  else if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+    console.log("✅ Token obtenido de header");
   }
 
   // Verificar que el token existe
   if (!token) {
-    console.log('❌ No se encontró token');
+    console.log("❌ No se encontró token");
     return res.status(401).json({
       success: false,
-      message: 'No estás autorizado para acceder a esta ruta'
+      message: "No estás autorizado para acceder a esta ruta",
     });
   }
 
@@ -33,16 +36,19 @@ exports.protect = async (req, res, next) => {
     // Verificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    console.log("User typeof:", typeof User);
+    console.log("User keys:", Object.keys(User));
+
     // Buscar el usuario por ID y poblar role e ies
     req.user = await User.findById(decoded.id)
-      .select('-password')
-      .populate('role')
-      .populate('ies', 'name code');
+      .select("-password")
+      .populate("role")
+      .populate("ies", "name code");
 
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: 'Usuario no encontrado'
+        message: "Usuario no encontrado",
       });
     }
 
@@ -50,7 +56,7 @@ exports.protect = async (req, res, next) => {
     if (!req.user.active) {
       return res.status(401).json({
         success: false,
-        message: 'Tu cuenta ha sido desactivada'
+        message: "Tu cuenta ha sido desactivada",
       });
     }
 
@@ -60,9 +66,12 @@ exports.protect = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("❌ JWT VERIFY ERROR:", error.message);
+    console.error("❌ SERVER TIME:", new Date());
+
     return res.status(401).json({
       success: false,
-      message: 'Token inválido o expirado'
+      message: "Token inválido o expirado",
     });
   }
 };
@@ -73,7 +82,7 @@ exports.authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `El rol ${req.user.role} no tiene permiso para realizar esta acción`
+        message: `El rol ${req.user.role} no tiene permiso para realizar esta acción`,
       });
     }
     next();
@@ -85,7 +94,7 @@ exports.checkIESOwnership = (req, res, next) => {
   const iesId = req.params.iesId || req.body.ies;
 
   // Admin Nacional puede acceder a cualquier IES
-  if (req.user.role === 'Admin Nacional') {
+  if (req.user.role === "Admin Nacional") {
     return next();
   }
 
@@ -93,7 +102,7 @@ exports.checkIESOwnership = (req, res, next) => {
   if (req.user.ies && req.user.ies.toString() !== iesId) {
     return res.status(403).json({
       success: false,
-      message: 'No tienes permiso para acceder a esta IES'
+      message: "No tienes permiso para acceder a esta IES",
     });
   }
 
