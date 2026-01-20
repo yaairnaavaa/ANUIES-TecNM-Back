@@ -2,6 +2,7 @@ const CAMP = require("./campaign.model");
 
 class CampaignRepository {
   async getAllCampaigns(queryObject) {
+    let query = CAMP.find();
     return await query.sort({ name: 1 });
   }
 
