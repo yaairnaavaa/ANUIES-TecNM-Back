@@ -54,14 +54,15 @@ app.get("/", (req, res) => {
 });
 
 // Rutas de la API
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/roles", require("./routes/roleRoutes"));
-app.use("/api/permissions", require("./routes/permissionRoutes"));
+// app.use("/api/auth", require("./routes/authRoutes"));
+// app.use("/api/roles", require("./routes/roleRoutes"));
+// app.use("/api/permissions", require("./routes/permissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
 app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));
 app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));
 app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
-app.use("/api/prospects", require("./routes/prospectRoutes"));
+app.use("/api/ciclos", require("./src/modules/Ciclos/ciclo.routes"));
+// app.use("/api/prospects", require("./routes/prospectRoutes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
