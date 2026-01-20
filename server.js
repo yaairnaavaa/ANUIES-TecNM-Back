@@ -66,7 +66,7 @@ app.use("/api/ciclos", require("./src/modules/Ciclos/ciclo.routes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
-// require("./models/MenuPermission");
+require("./models/MenuPermission");
 // require("./models/Role");
 // require("./models/User");
 // require("./models/Period"); // si existe

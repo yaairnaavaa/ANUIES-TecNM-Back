@@ -5,6 +5,9 @@ class CampaignController {
     this.campaignService = campaignService;
   }
 
+  // // @desc    Obtener una IES por ID
+  // // @route   GET /api/ies/:id
+  // // @access  Private
   getAllCampaigns = asyncHandler(async (req, res) => {
     const queryObject = req.query;
 

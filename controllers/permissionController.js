@@ -1,5 +1,5 @@
-const Permission = require('../models/Permission');
-const asyncHandler = require('./../src/middleware/asyncHandler');
+const Permission = require("./../models/Permission");
+const asyncHandler = require("./../src/middleware/asyncHandler");
 
 // @desc    Obtener todos los permisos
 // @route   GET /api/permissions
@@ -9,12 +9,12 @@ exports.getAllPermissions = asyncHandler(async (req, res) => {
 
   // Filtrar por módulo si se proporciona
   if (req.query.module) {
-    query = query.where('module').equals(req.query.module);
+    query = query.where("module").equals(req.query.module);
   }
 
   // Filtrar por acción si se proporciona
   if (req.query.action) {
-    query = query.where('action').equals(req.query.action);
+    query = query.where("action").equals(req.query.action);
   }
 
   const permissions = await query.sort({ module: 1, resource: 1 });
@@ -22,7 +22,7 @@ exports.getAllPermissions = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     count: permissions.length,
-    data: permissions
+    data: permissions,
   });
 });
 
@@ -35,13 +35,13 @@ exports.getPermissionById = asyncHandler(async (req, res) => {
   if (!permission) {
     return res.status(404).json({
       success: false,
-      message: 'Permiso no encontrado'
+      message: "Permiso no encontrado",
     });
   }
 
   res.status(200).json({
     success: true,
-    data: permission
+    data: permission,
   });
 });
 
@@ -53,8 +53,8 @@ exports.createPermission = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'Permiso creado exitosamente',
-    data: permission
+    message: "Permiso creado exitosamente",
+    data: permission,
   });
 });
 
@@ -67,19 +67,19 @@ exports.updatePermission = asyncHandler(async (req, res) => {
   if (!permission) {
     return res.status(404).json({
       success: false,
-      message: 'Permiso no encontrado'
+      message: "Permiso no encontrado",
     });
   }
 
   permission = await Permission.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
 
   res.status(200).json({
     success: true,
-    message: 'Permiso actualizado exitosamente',
-    data: permission
+    message: "Permiso actualizado exitosamente",
+    data: permission,
   });
 });
 
@@ -92,7 +92,7 @@ exports.deletePermission = asyncHandler(async (req, res) => {
   if (!permission) {
     return res.status(404).json({
       success: false,
-      message: 'Permiso no encontrado'
+      message: "Permiso no encontrado",
     });
   }
 
@@ -100,6 +100,6 @@ exports.deletePermission = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: 'Permiso eliminado exitosamente'
+    message: "Permiso eliminado exitosamente",
   });
 });
