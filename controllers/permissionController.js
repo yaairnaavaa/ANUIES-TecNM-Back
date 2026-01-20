@@ -1,5 +1,5 @@
 const Permission = require('../models/Permission');
-const asyncHandler = require('../middleware/asyncHandler');
+const asyncHandler = require('./../src/middleware/asyncHandler');
 
 // @desc    Obtener todos los permisos
 // @route   GET /api/permissions

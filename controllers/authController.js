@@ -1,6 +1,6 @@
-const User = require("../models/User");
-const generateToken = require("../utils/generateToken");
-const asyncHandler = require("../middleware/asyncHandler");
+const User = require("./../models/User");
+const generateToken = require("./../utils/generateToken");
+const asyncHandler = require("./../src/middleware/asyncHandler");
 
 /**
  * @desc    Registrar nuevo usuario
@@ -174,10 +174,10 @@ exports.login = asyncHandler(async (req, res) => {
   const token = generateToken(user._id);
 
   // Configurar cookie con el token (httpOnly para seguridad)
-  res.cookie('anuies_token', token, {
+  res.cookie("anuies_token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   });
 
@@ -261,7 +261,7 @@ exports.updatePassword = asyncHandler(async (req, res) => {
  */
 exports.logout = asyncHandler(async (req, res) => {
   // Limpiar la cookie del token
-  res.cookie('anuies_token', '', {
+  res.cookie("anuies_token", "", {
     httpOnly: true,
     secure: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

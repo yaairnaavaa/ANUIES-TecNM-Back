@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   registerProspect,
   updateProspectProfile,
@@ -6,9 +6,9 @@ const {
   getProspectById,
   assignProspect,
   updateObservations,
-  validateProspect
-} = require('../controllers/prospectController');
-const { protect, authorize } = require('../middleware/auth');
+  validateProspect,
+} = require("../controllers/prospectController");
+const { protect, authorize } = require("./../src/middleware/auth");
 
 const router = express.Router();
 
