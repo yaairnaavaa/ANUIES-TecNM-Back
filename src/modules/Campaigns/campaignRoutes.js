@@ -1,12 +1,15 @@
 const express = require("express");
 
-const { protect, authorize } = require("./../../middleware/auth");
+// const { protect, authorize } = require("./../../middleware/auth");
 
 const { campaignController } = require("./../../../bootstrap");
 
 const router = express.Router();
 
-router.route("/").get(campaignController.getAllCampaigns);
+router
+  .route("/")
+  .get(campaignController.getAllCampaigns)
+  .post(campaignController.createCampaign);
 
 router
   .route("/:id")

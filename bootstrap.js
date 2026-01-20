@@ -30,7 +30,12 @@ const IES_service = new IES_Service(IES_repository);
 exports.IES_controller = new IES_Controller(IES_service);
 
 //CAMPAINGS BOOTRAP
-const campaignService = new CampaignService(campaignRepository);
+const campaignService = new CampaignService(
+  campaignRepository,
+  cicloRepository,
+  IES_repository,
+  IEMS_repository,
+);
 exports.campaignController = new CampaignController(campaignService);
 
 //CICLOS BOOTRSTARP
