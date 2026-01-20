@@ -2,6 +2,7 @@ class CampaignService {
   constructor(campaignRepository) {
     this.campaignRepository = campaignRepository;
   }
+  
   async getAllCampaigns(queryObject) {
     return await this.campaignRepository.getAllCampaigns(queryObject);
   }

@@ -1,10 +1,18 @@
-const express = require('express');
+const express = require("express");
 
-const { protect, authorize } = require('./../../middleware/auth');
+const { protect, authorize } = require("./../../middleware/auth");
+
+const { campaignController } = require("./../../../bootstrap");
 
 const router = express.Router();
 
-router.route('/')
+router.route("/").get(campaignController.getAllCampaigns);
+
+router
+  .route("/:id")
+  .get(campaignController.getCampaignById)
+  .delete(campaignController.deactivateCampaign)
+  .patch(campaignController.updateCampaign);
 
 // Todas las rutas públicas
 // router.get('/', getAllCampaigns);

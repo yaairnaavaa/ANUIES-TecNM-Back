@@ -1,10 +1,66 @@
-// const Campaign = require('./campaign.model');
 const asyncHandler = require("../../middleware/asyncHandler");
 
 class CampaignController {
   constructor(campaignService) {
     this.campaignService = campaignService;
   }
+
+  getAllCampaigns = asyncHandler(async (req, res) => {
+    const queryObject = req.query;
+
+    const campaigns = await this.campaignService.getAllCampaigns(queryObject);
+
+    res.status(200).json({
+      status: "success",
+      results: campaigns.length,
+      data: campaigns,
+    });
+  });
+
+  getCampaignById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const campaign = await this.campaignService.getCampaignById(id);
+
+    res.status(201).json({
+      status: "success",
+      data: campaign,
+    });
+  });
+
+  createCampaign = asyncHandler(async (req, res) => {
+    const data = req.body;
+
+    const createdCampaign = await this.campaignService.createCampaign(data);
+
+    res.status(200).json({
+      status: "success",
+      data: createdCampaign,
+    });
+  });
+
+  updateCampaign = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    const updatedCampaign = await this.campaignService.updateCampaign(id, data);
+
+    res.status(200).json({
+      status: "success",
+      data: updatedCampaign,
+    });
+  });
+
+  deactivateCampaign = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    await this.campaignService.deactivateCampaign(id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Campaña desactivada correctamente",
+    });
+  });
 }
 
 module.exports = CampaignController;

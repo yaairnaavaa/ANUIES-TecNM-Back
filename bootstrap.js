@@ -26,4 +26,4 @@ exports.IES_controller = new IES_Controller(IES_service);
 
 //CAMPAINGS BOOTRAP
 const campaignService = new CampaignService(campaignRepository);
-exports.campaignContrller = new CampaignController(campaignService);
+exports.campaignController = new CampaignController(campaignService);
