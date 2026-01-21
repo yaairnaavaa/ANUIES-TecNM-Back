@@ -24,6 +24,10 @@ class CicloRepository {
     });
   }
 
+  async getCurrentCicleActive() {
+    return await Ciclo.findOne({ active: true });
+  }
+
   async desactivarCiclosEnInsercionNuevoCiclo(idCicloNuevo, session) {
     return await Ciclo.updateMany(
       {

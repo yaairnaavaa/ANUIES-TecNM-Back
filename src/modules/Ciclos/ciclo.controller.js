@@ -17,6 +17,15 @@ class CicloController {
     });
   });
 
+  getCurrentCicleActive = asyncHandler(async (req, res) => {
+    const currentActive = await this.cicloService.getCurrentCicleActive();
+
+    res.status(200).json({
+      status: "success",
+      data: { currentActive },
+    });
+  });
+
   getCicloById = asyncHandler(async (req, res) => {
     const { id } = req.params;
 

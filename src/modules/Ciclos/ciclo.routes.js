@@ -9,6 +9,8 @@ router
   .get(cicloController.getCiclos)
   .post(cicloController.createCiclo);
 
+router.get("/currentActive", cicloController.getCurrentCicleActive);
+
 router.route("/:id").get(cicloController.getCicloById);
 
 module.exports = router;

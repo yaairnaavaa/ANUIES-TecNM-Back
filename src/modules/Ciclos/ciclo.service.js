@@ -9,6 +9,10 @@ class CicloService {
     return await this.cicloRepository.getCiclos(queryObject);
   }
 
+  async getCurrentCicleActive() {
+    return await this.cicloRepository.getCurrentCicleActive();
+  }
+
   async getCicloById(id) {
     const ciclo = await this.cicloRepository.getCicloById(id);
 
@@ -41,7 +45,6 @@ class CicloService {
 
       return createdCiclo;
     } catch (error) {
-        
       await session.abortTransaction();
       await session.endSession();
 
