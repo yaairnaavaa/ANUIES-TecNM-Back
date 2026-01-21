@@ -12,6 +12,10 @@ const CicloService = require("./src/modules/Ciclos/ciclo.service.js");
 const CicloRepository = require("./src/modules/Ciclos/ciclo.repository.js");
 const CicloController = require("./src/modules/Ciclos/ciclo.controller.js");
 
+const UserRepository = require("./src/modules/Users/user.repository.js");
+const UserService = require("./src/modules/Users/user.service.js");
+const UserController = require("./src/modules/Users/user.controller.js");
+
 // const FileHandler = require("./utils/fileHandler.js");
 // exports.fileHandler = new FileHandler("tempFiles");
 
@@ -20,6 +24,7 @@ const IEMS_repository = new IEMS_Repository();
 const IES_repository = new IES_Repository();
 const campaignRepository = new CampaignRepository();
 const cicloRepository = new CicloRepository();
+const userRepository = new UserRepository();
 
 //IEMS BOOTSTRAP
 const IEMS_service = new IEMS_Service(IEMS_repository);
@@ -41,3 +46,7 @@ exports.campaignController = new CampaignController(campaignService);
 //CICLOS BOOTRSTARP
 const cicloService = new CicloService(cicloRepository);
 exports.cicloController = new CicloController(cicloService);
+
+//USERS BOOTSTRAP
+const userService = new UserService(userRepository);
+exports.userController = new UserController(userService);
