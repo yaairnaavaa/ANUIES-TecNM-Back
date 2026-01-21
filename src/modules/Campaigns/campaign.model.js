@@ -27,19 +27,20 @@ const campaignSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["presencial", "digital"],
+      enum: ["Presencial", "Virtual"],
       required: true,
     },
     specificModality: {
       type: String,
       required: true,
       enum: [
-        "feria/evento",
-        "visita a escuela",
-        "tiktok",
-        "instagram",
-        "facebook",
-        "general",
+        "Feria/Evento",
+        "Visita a escuela",
+        "Tiktok",
+        "Instagram",
+        "Facebook",
+        "YouTube",
+        "General",
       ],
       trim: true,
     },
@@ -131,17 +132,15 @@ const campaignSchema = new mongoose.Schema(
     },
     // Responsables
     responsible: {
-      main: {
+      id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
       },
-      collaborators: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+      name: {
+          type: String,
+          required: true,
+      }
     },
     // Estado y control
     status: {
