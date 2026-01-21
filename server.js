@@ -64,6 +64,7 @@ app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
 app.use("/api/cycles", require("./src/modules/Ciclos/ciclo.routes"));
 app.use("/api/prospects", require("./routes/prospectRoutes"));
 app.use("/api/users", require("./src/modules/Users/user.routes"));
+app.use("/api/carreras", require("./src/modules/Carreras/carreras.routes"));
 // app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
