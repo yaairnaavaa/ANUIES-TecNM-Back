@@ -54,6 +54,21 @@ class IES_Repository {
     });
   }
 
+  async addCarreraIES(iesId, carrera, session) {
+    return await IES.findByIdAndUpdate(
+      iesId,
+      {
+        $push: {
+          careers: {
+            carreraId: carrera._id,
+            carreraName: carrera.name,
+          },
+        },
+      },
+      { session, new: true },
+    );
+  }
+
   async getCarreraByName(iesId, carreraNombre) {
     return await IES.findOne({
       _id: iesId,

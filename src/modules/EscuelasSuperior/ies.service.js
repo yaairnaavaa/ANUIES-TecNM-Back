@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
+
 class IES_Service {
-  constructor(IES_repository) {
+  constructor(IES_repository, carrerasRepository) {
     this.IES_repository = IES_repository;
+    this.carrerasRepository = carrerasRepository;
   }
 
   async getAllIES(queryObject) {
@@ -43,6 +46,41 @@ class IES_Service {
     throw new Error(
       "No se pudo desactivar la carrera por el momento. Intenta mas tarde",
     );
+  }
+
+  async agregarCarreraDeIES(iesId, dataCarrera) {
+    const ies = await this.IES_repository.getIESById(iesId);
+
+    if (!ies) throw new Error(`IES con el id ${iesId} no existe`);
+
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    try {
+      const createdCareer = await this.carrerasRepository.createCarrera(
+        dataCarrera,
+        session,
+      );
+
+      const updatedIES = await this.IES_repository.addCarreraIES(
+        iesId,
+        createdCareer,
+        session,
+      );
+
+      if (!updatedIES) throw new Error("Error al insertar carrera en IES");
+
+      await session.commitTransaction();
+
+      return updatedIES;
+    } catch (error) {
+      session.abortTransaction();
+
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async getCarreraById(iesId, carreraId) {

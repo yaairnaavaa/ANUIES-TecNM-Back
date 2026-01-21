@@ -9,8 +9,9 @@ class CarrerasRepository {
     return await Carrera.findById(id);
   }
 
-  async createCarrera(data) {
-    return await Carrera.create(data);
+  async createCarrera(data, session) {
+    const [carrera] = await Carrera.create([data], { session });
+    return carrera;
   }
 
   async deactivateCarreraById(id) {

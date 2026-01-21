@@ -38,7 +38,7 @@ const IEMS_service = new IEMS_Service(IEMS_repository);
 exports.IEMS_controller = new IEMS_Controller(IEMS_service);
 
 //IES BOOTRSTRAP
-const IES_service = new IES_Service(IES_repository);
+const IES_service = new IES_Service(IES_repository, carrerasRepository);
 exports.IES_controller = new IES_Controller(IES_service);
 
 //CAMPAINGS BOOTRAP

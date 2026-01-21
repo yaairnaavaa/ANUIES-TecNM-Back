@@ -32,6 +32,24 @@ class IES_Controller {
     });
   });
 
+  // // @desc   Insertar carreras a una IES
+  // // @route   POST /api/ies:id/carreras
+  // // @access  Public (con filtros si está autenticado)
+  agregarCarreraDeIES = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const dataCarrera = req.body;
+
+    const createdCareer = await this.IES_service.agregarCarreraDeIES(
+      id,
+      dataCarrera,
+    );
+
+    res.status(201).json({
+      success: true,
+      data: createdCareer,
+    });
+  });
+
   // // @desc    Actualizar una carreras de una IES
   // // @route   patch /api/ies:iesId/carreras/:carreraNombre
   // // @access  Public (con filtros si está autenticado)

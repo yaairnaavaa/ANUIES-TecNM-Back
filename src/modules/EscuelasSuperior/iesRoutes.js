@@ -22,7 +22,9 @@ router
   .delete(IES_controller.deactivateIES);
 
 //CUSTOM ROUTES
-router.route("/:id/carreras").get(IES_controller.getCarrerasDeIES);
+router.route("/:id/carreras").get(IES_controller.getCarrerasDeIES)
+.post(IES_controller.agregarCarreraDeIES);
+
 router
   .route("/:iesId/carreras/:carreraNombre")
   .patch(IES_controller.actualizarCarreraDeIES);
