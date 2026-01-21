@@ -73,7 +73,7 @@ class IES_Service {
 
       await session.commitTransaction();
 
-      return updatedIES;
+      return updatedIES.careers;
     } catch (error) {
       session.abortTransaction();
 
