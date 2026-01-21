@@ -125,11 +125,11 @@ const iemsSchema = new mongoose.Schema(
       default: true,
     },
     //cambio code === cct?
-    cct: {
-      type: String,
-      required: [true, "CCT REQUIRED"],
-      unique: true,
-    },
+    // cct: {
+    //   type: String,
+    //   required: [true, "CCT REQUIRED"],
+    //   unique: true,
+    // },
     notes: String,
   },
   {
