@@ -38,7 +38,7 @@ const CicloEscuelas = new mongoose.Schema(
     },
     active: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   {

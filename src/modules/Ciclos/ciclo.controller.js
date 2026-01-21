@@ -5,6 +5,8 @@ class CicloController {
     this.cicloService = cicloService;
   }
 
+  //controlador para 
+
   getCiclos = asyncHandler(async (req, res) => {
     const queryObject = req.query;
 
