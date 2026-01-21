@@ -28,16 +28,20 @@ class CicloService {
 
     try {
       const createdCiclo = await this.cicloRepository.createCiclo(
-        { ...data, active: true },
+        { ...data },
         session,
       );
 
       if (!createdCiclo) throw new Error("Error al crear ciclo");
 
-      await this.cicloRepository.desactivarCiclosEnInsercionNuevoCiclo(
-        createdCiclo._id,
-        session,
-      );
+      //solo si se especifica que está activo, cambiar las demás
+
+      if (data.activo) {
+        await this.cicloRepository.desactivarCiclosEnInsercionNuevoCiclo(
+          createdCiclo._id,
+          session,
+        );
+      }
 
       await session.commitTransaction();
 
