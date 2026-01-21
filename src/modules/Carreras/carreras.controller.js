@@ -17,7 +17,7 @@ class CarrerasController {
     });
   });
 
-  async getCarreraById(id) {
+  getCarreraById = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     const carrera = await this.carrerasService.getCarreraById(id);
@@ -26,9 +26,9 @@ class CarrerasController {
       status: "success",
       data: carrera,
     });
-  }
+  });
 
-  async createCarrera(data) {
+  createCarrera = asyncHandler(async (req, res) => {
     const data = req.body;
 
     const createdCarrera = await this.carrerasService.createCarrera(data);
@@ -37,9 +37,9 @@ class CarrerasController {
       status: "success",
       data: createdCarrera,
     });
-  }
+  });
 
-  async deactivateCarreraById(id) {
+  deactivateCarreraById = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     const deactivatedCarrera =
@@ -49,7 +49,7 @@ class CarrerasController {
       status: "success",
       message: `Carrera: {${deactivatedCarrera.name}} con el id: ${id} desactivada correctamente`,
     });
-  }
+  });
 }
 
 module.exports = CarrerasController;

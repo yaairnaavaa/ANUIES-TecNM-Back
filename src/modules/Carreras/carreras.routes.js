@@ -11,3 +11,5 @@ router
 router.route("/:id").get(carrerasController.getCarreraById);
 
 router.route("/:id/deactivate").post(carrerasController.deactivateCarreraById);
+
+module.exports = router;
