@@ -79,10 +79,13 @@ exports.protect = async (req, res, next) => {
 // Middleware para autorizar roles específicos
 exports.authorize = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    // Obtener el nombre del rol del usuario
+    const userRoleName = req.user.role?.name || req.user.role;
+    
+    if (!roles.includes(userRoleName)) {
       return res.status(403).json({
         success: false,
-        message: `El rol ${req.user.role} no tiene permiso para realizar esta acción`,
+        message: `El rol ${userRoleName} no tiene permiso para realizar esta acción`,
       });
     }
     next();
@@ -93,8 +96,11 @@ exports.authorize = (...roles) => {
 exports.checkIESOwnership = (req, res, next) => {
   const iesId = req.params.iesId || req.body.ies;
 
+  // Obtener el nombre del rol del usuario
+  const userRoleName = req.user.role?.name || req.user.role;
+
   // Admin Nacional puede acceder a cualquier IES
-  if (req.user.role === "Admin Nacional") {
+  if (userRoleName === "Admin Nacional") {
     return next();
   }
 
