@@ -53,7 +53,7 @@ const CarreraSchema = mongoose.Schema(
   { timestamps: true },
 );
 
-CarreraSchema.index({ name: 1 });
+// CarreraSchema.index({ name: 1 });
 CarreraSchema.index({ code: 1 });
 // CarreraSchema.index({ "ies.iesId": 1 });
 CarreraSchema.index({ active: 1 });
