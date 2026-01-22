@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
+
 class CarrerasService {
-  constructor(carrerasRepository) {
+  constructor(carrerasRepository, iesRepository) {
     this.carrerasRepository = carrerasRepository;
+    this.iesRepository = iesRepository;
   }
 
   async getCarreras(queryObject) {
@@ -24,12 +27,25 @@ class CarrerasService {
     return createdCarrera;
   }
 
+  async updateCarrera(idCarrera, data) {
+    const carrera = this.carrerasRepository.getCarreraById(idCarrera);
+
+    if (!carrera) throw new Error(`Carrera con el id: ${id} no existe`);
+  }
+
   async deactivateCarreraById(id) {
     const deactivatedCarrera =
       await this.carrerasRepository.deactivateCarreraById(id);
 
     if (!deactivatedCarrera)
       throw new Error(`Error al desactivar carrera con id: ${id}`);
+
+    //comenzar transaccion
+    const session = await mongoose.startSession();
+
+    //actualizar carrera para traer todos sus datos
+
+    //buscar y actualizar en todas las ies que hay esa carrera
 
     return deactivatedCarrera;
   }

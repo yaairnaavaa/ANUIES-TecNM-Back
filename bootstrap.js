@@ -59,5 +59,8 @@ const userService = new UserService(userRepository);
 exports.userController = new UserController(userService);
 
 //CARRERAS BOOTRSRAP
-const carrerasServices = new CarrerasService(carrerasRepository);
+const carrerasServices = new CarrerasService(
+  carrerasRepository,
+  IES_repository,
+);
 exports.carrerasController = new CarrerasController(carrerasServices);

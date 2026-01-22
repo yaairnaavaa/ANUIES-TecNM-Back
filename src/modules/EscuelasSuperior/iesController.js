@@ -99,11 +99,12 @@ class IES_Controller {
   });
 
   // // @desc    Actualizar IES
-  // // @route   PUT /api/ies/:id
+  // // @route   PATCH /api/ies/:id
   // // @access  Private (Admin Nacional o Admin IES de esa IES)
   updateIES = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const data = req.body;
+    
     let updatedIes = await this.IES_service.updateIES(id, data);
 
     res.status(200).json({

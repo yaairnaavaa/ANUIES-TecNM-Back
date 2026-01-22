@@ -1,4 +1,5 @@
 const Ciclo = require("./ciclo.model.js");
+const flatten = require("./../../../utils/flatten.js");
 
 class CicloRepository {
   async getCiclos(queryObject) {
@@ -18,10 +19,18 @@ class CicloRepository {
   }
 
   async updateCiclo(id, data) {
-    return await Ciclo.findByIdAndUpdate(id, data, {
-      new: true,
-      runValidators: false,
-    });
+    const updateObject = flatten(data);
+
+    return await Ciclo.findByIdAndUpdate(
+      id,
+      {
+        $set: updateObject,
+      },
+      {
+        new: true,
+        runValidators: false,
+      },
+    );
   }
 
   async getCurrentCicleActive() {

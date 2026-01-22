@@ -85,7 +85,7 @@ class IES_Service {
       await session.abortTransaction();
 
       throw error;
-    }finally{
+    } finally {
       await session.endSession();
     }
   }
@@ -153,33 +153,12 @@ class IES_Service {
 
     if (!ies) throw new Error(`IES con id: ${id} no existe`);
 
-    // // console.log(Object.keys(data));
-    // // console.log(Object.entries(data));
+    const updatedIES = await this.IES_repository.updateIES(id, data);
 
-    // const keys = Object.keys(data);
+    if (!updatedIES)
+      throw new Error("No se pudo actualizar el IES. Intenta mas tarde");
 
-    // let keyObjects;
-
-    // // keys.forEach((key) => {
-    // //   //  console.log(data[key])
-    // // });
-
-    // Object.entries(data).forEach((entrie) => {
-    //   console.log(entrie);
-    // });
-
-    // console.log(keyObjects);
-
-    // Object.keys()
-    // const updatedIes = await this.IES_repository.updateIES(id, data);
-
-    // if (updatedIes) return updatedIes;
-
-    // const iesExists = await this.IES_repository.getIESById(id);
-
-    // if (!iesExists) throw new Error(`IES con id: ${id} no existe`);
-
-    throw new Error("No se pudo actualizar el IES. Intenta mas tarde");
+    return updatedIES;
   }
 
   async deactivateIES(id) {

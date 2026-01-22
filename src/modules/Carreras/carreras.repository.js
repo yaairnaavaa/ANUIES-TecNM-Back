@@ -1,4 +1,5 @@
 const Carrera = require("./carreras.model");
+const flatten = require("./../../../utils/flatten");
 
 class CarrerasRepository {
   async getCarreras(queryObject) {
@@ -12,6 +13,10 @@ class CarrerasRepository {
   async createCarrera(data, session) {
     const [carrera] = await Carrera.create([data], { session });
     return carrera;
+  }
+
+  async updateCarrera(idCarrera, data, session) {
+    const updateObject = flatten(data);
   }
 
   async deactivateCarreraById(id) {

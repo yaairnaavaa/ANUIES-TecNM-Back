@@ -8,7 +8,10 @@ router
   .get(carrerasController.getCarreras)
   .post(carrerasController.createCarrera);
 
-router.route("/:id").get(carrerasController.getCarreraById);
+router
+  .route("/:id")
+  .get(carrerasController.getCarreraById)
+  .patch(carrerasController.updateCarrera);
 
 router.route("/:id/deactivate").patch(carrerasController.deactivateCarreraById);
 

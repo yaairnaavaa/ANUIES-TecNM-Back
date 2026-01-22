@@ -1,4 +1,5 @@
 const IEMS = require("./IEMS.model");
+const flatten = require("./../../../utils/flatten");
 
 class IEMS_Repository {
   async getAllIEMS(queryObject) {
@@ -40,7 +41,9 @@ class IEMS_Repository {
   }
 
   async updateIEMS(id, data) {
-    return await IEMS.findByIdAndUpdate(id, data, { new: true });
+    const updateObject = flatten(data);
+
+    return await IEMS.findByIdAndUpdate(id, updateObject, { new: true });
   }
 
   async deactivateIEMS(id) {

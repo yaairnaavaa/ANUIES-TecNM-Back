@@ -1,4 +1,5 @@
 const IES = require("./IES.model");
+const flatten = require("./../../../utils/flatten");
 
 class IES_Repository {
   async getAllIES(queryObject) {
@@ -85,7 +86,15 @@ class IES_Repository {
   }
 
   async updateIES(id, data) {
-    return await IES.findByIdAndUpdate(id, data, { new: true });
+    const updateObject = flatten(data);
+
+    return await IES.findByIdAndUpdate(
+      id,
+      {
+        $set: updateObject,
+      },
+      { new: true },
+    );
   }
 
   async deactivateIES(id) {

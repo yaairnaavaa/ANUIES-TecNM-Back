@@ -1,4 +1,5 @@
 const CAMP = require("./campaign.model");
+const flatten = require("./../../../utils/flatten");
 
 class CampaignRepository {
   async getAllCampaigns(queryObject) {
@@ -15,7 +16,15 @@ class CampaignRepository {
   }
 
   async updateCampaign(id, data) {
-    return await CAMP.findByIdAndUpdate(id, data, { new: true });
+    const updateObject = flatten(data);
+
+    return await CAMP.findByIdAndUpdate(
+      id,
+      {
+        $set: updateObject,
+      },
+      { new: true },
+    );
   }
 
   async deactivateCampaign(id) {

@@ -11,6 +11,9 @@ router
 
 router.get("/currentActive", cicloController.getCurrentCicleActive);
 
-router.route("/:id").get(cicloController.getCicloById);
+router
+  .route("/:id")
+  .get(cicloController.getCicloById)
+  .patch(cicloController.updateCiclo);
 
 module.exports = router;
