@@ -28,9 +28,9 @@ class CarrerasService {
   }
 
   async updateCarrera(idCarrera, data) {
-    const carrera = this.carrerasRepository.getCarreraById(idCarrera);
+    const carrera = await this.carrerasRepository.getCarreraById(idCarrera);
 
-    if (!carrera) throw new Error(`Carrera con el id: ${id} no existe`);
+    if (!carrera) throw new Error(`Carrera con el id: ${idCarrera} no existe`);
 
     //comenzar transaccion
     const session = await mongoose.startSession();
@@ -49,11 +49,25 @@ class CarrerasService {
         throw new Error(`Error al editar carrera con id:${idCarrera}`);
 
       if (data.name) {
-        const IESconMateria = await this.iesRepository.getAllIES({
-          "careers.name": updatedCareer.name,
-        });
+        const IESconMateria = await this.iesRepository.getAllIES(
+          {
+            careers: { $elemMatch: { carreraId: carrera._id } },
+          },
+          session,
+        );
 
-        // console.log("ies",IESconMateria);
+        if (IESconMateria.length) {
+          await Promise.all(
+            IESconMateria.map((ies) =>
+              this.iesRepository.updateCareerName(
+                ies._id,
+                idCarrera,
+                updatedCareer.name,
+                session,
+              ),
+            ),
+          );
+        }
       }
 
       await session.commitTransaction();
@@ -66,8 +80,6 @@ class CarrerasService {
     } finally {
       await session.endSession();
     }
-
-    //buscar y actualizar en todas las ies que hay esa carrera
   }
 
   async deactivateCarreraById(id) {

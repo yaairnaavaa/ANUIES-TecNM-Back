@@ -2,7 +2,7 @@ const IES = require("./IES.model");
 const flatten = require("./../../../utils/flatten");
 
 class IES_Repository {
-  async getAllIES(queryObject) {
+  async getAllIES(queryObject, session) {
     // const { state, active } = queryObject || undefined;
 
     // const state = queryObject.state;
@@ -23,7 +23,7 @@ class IES_Repository {
     //     query = query.where('_id').equals(req.user.ies);
     //   }
 
-    return await query.sort({ name: 1 });
+    return await query.sort({ name: 1 }, session);
   }
 
   async getCarrerasDeIES(id) {
@@ -55,6 +55,24 @@ class IES_Repository {
     });
   }
 
+async updateCareerName(iesId, carreraId, name, session) {
+  return await IES.findOneAndUpdate(
+    {
+      _id: iesId,
+      "careers.carreraId": carreraId, // 🔑 clave
+    },
+    {
+      $set: {
+        "careers.$.carreraName": name,
+      },
+    },
+    {
+      new: true,
+      session,
+    }
+  );
+}
+
   async addCarreraIES(iesId, carrera, session) {
     return await IES.findByIdAndUpdate(
       iesId,
@@ -85,7 +103,7 @@ class IES_Repository {
     return await IES.create(data);
   }
 
-  async updateIES(id, data) {
+  async updateIES(id, data, session) {
     const updateObject = flatten(data);
 
     return await IES.findByIdAndUpdate(
@@ -93,7 +111,7 @@ class IES_Repository {
       {
         $set: updateObject,
       },
-      { new: true },
+      { session, new: true },
     );
   }
 
