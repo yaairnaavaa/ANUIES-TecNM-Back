@@ -57,6 +57,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/roles", require("./routes/roleRoutes"));
 app.use("/api/permissions", require("./routes/permissionRoutes"));
+app.use("/api/menupermissions", require("./routes/menuPermissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
 app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));
 app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));
