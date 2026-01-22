@@ -31,6 +31,43 @@ class CarrerasService {
     const carrera = this.carrerasRepository.getCarreraById(idCarrera);
 
     if (!carrera) throw new Error(`Carrera con el id: ${id} no existe`);
+
+    //comenzar transaccion
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    try {
+      //actualizar carrera para traer todos sus datos
+      const updatedCareer = await this.carrerasRepository.updateCarrera(
+        idCarrera,
+        data,
+        session,
+      );
+
+      if (!updatedCareer)
+        throw new Error(`Error al editar carrera con id:${idCarrera}`);
+
+      if (data.name) {
+        const IESconMateria = await this.iesRepository.getAllIES({
+          "careers.name": updatedCareer.name,
+        });
+
+        // console.log("ies",IESconMateria);
+      }
+
+      await session.commitTransaction();
+
+      return updatedCareer;
+    } catch (error) {
+      await session.abortTransaction();
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+
+    //buscar y actualizar en todas las ies que hay esa carrera
   }
 
   async deactivateCarreraById(id) {
@@ -39,13 +76,6 @@ class CarrerasService {
 
     if (!deactivatedCarrera)
       throw new Error(`Error al desactivar carrera con id: ${id}`);
-
-    //comenzar transaccion
-    const session = await mongoose.startSession();
-
-    //actualizar carrera para traer todos sus datos
-
-    //buscar y actualizar en todas las ies que hay esa carrera
 
     return deactivatedCarrera;
   }

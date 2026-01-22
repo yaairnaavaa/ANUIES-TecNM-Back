@@ -17,6 +17,14 @@ class CarrerasRepository {
 
   async updateCarrera(idCarrera, data, session) {
     const updateObject = flatten(data);
+
+    return Carrera.findByIdAndUpdate(
+      idCarrera,
+      {
+        $set: updateObject,
+      },
+      { session, new: true },
+    );
   }
 
   async deactivateCarreraById(id) {

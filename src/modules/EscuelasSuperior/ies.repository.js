@@ -8,7 +8,7 @@ class IES_Repository {
     // const state = queryObject.state;
     // const active = queryObject.active;
 
-    let query = IES.find();
+    let query = IES.find(queryObject);
     // // Filtros opcionales
     // if (state) {
     //   query = query.where("address.state").equals(state);

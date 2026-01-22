@@ -22,6 +22,9 @@ const CarrerasRepository = require("./src/modules/Carreras/carreras.repository.j
 const CarrerasService = require("./src/modules/Carreras/carreras.service.js");
 const CarrerasController = require("./src/modules/Carreras/carreras.controller.js");
 
+const NotificacionesService = require("./src/modules/Notificaciones/notificaciones.service.js");
+const NotificacionesController = require("./src/modules/Notificaciones/notificaciones.controller.js");
+
 // const FileHandler = require("./utils/fileHandler.js");
 // exports.fileHandler = new FileHandler("tempFiles");
 
@@ -64,3 +67,7 @@ const carrerasServices = new CarrerasService(
   IES_repository,
 );
 exports.carrerasController = new CarrerasController(carrerasServices);
+
+//NOTIFICATION BOOTRSRAP
+const notificationService = new NotificacionesService();
+exports.notificacionesController = new NotificacionesController(notificationService);
