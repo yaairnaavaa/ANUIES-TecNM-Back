@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const CarreraSchema = mongoose.Schema(
   {
@@ -34,6 +35,10 @@ const CarreraSchema = mongoose.Schema(
         type: String,
         trim: true,
       },
+    },
+    careerLink: {
+      type: String,
+      validate: [validator.isURL, "Ingresa una URL válida"],
     },
     modality: {
       type: String,
