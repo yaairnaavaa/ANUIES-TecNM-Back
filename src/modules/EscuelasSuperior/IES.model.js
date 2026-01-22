@@ -122,7 +122,7 @@ iesSchema.index(
     _id: 1,
     "careers.carreraId": 1,
   },
-  { unique: true },
+  // { unique: true },
 );
 
 // Virtual para nombre completo

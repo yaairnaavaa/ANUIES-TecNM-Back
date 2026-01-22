@@ -59,7 +59,14 @@ class IES_Service {
 
     try {
       const createdCareer = await this.carrerasRepository.createCarrera(
-        dataCarrera,
+        {
+          ...dataCarrera,
+          ies: {
+            iesId,
+            iesName: ies.name,
+            iesShortname: ies.shortName,
+          },
+        },
         session,
       );
 
@@ -75,11 +82,11 @@ class IES_Service {
 
       return updatedIES.careers;
     } catch (error) {
-      session.abortTransaction();
+      await session.abortTransaction();
 
       throw error;
-    } finally {
-      session.endSession();
+    }finally{
+      await session.endSession();
     }
   }
 
