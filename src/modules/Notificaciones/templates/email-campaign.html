@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Registro - ANUIES</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1a2e4c 0%, #2563eb 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 10px 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1a2e4c;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .info-value {
+            font-weight: 700;
+            color: #1a2e4c;
+            text-align: right;
+        }
+        .folio-highlight {
+            background: #2563eb;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .icon {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            background: #10b981;
+            color: white;
+            border-radius: 50%;
+            line-height: 48px;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">✓</div>
+            <h1>¡Registro Exitoso!</h1>
+            <p>Asociación Nacional de Universidades e Instituciones de Educación Superior</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                ¡Hola {{fullName}}!
+            </div>
+            
+            <div class="message">
+                Tu registro ha sido procesado exitosamente. A continuación encontrarás los detalles de tu solicitud:
+            </div>
+            
+            <div class="info-box">
+                <div class="info-item">
+                    <span class="info-label">Folio de Registro:&nbsp;&nbsp;</span>
+                    <span class="info-value">
+                        <span class="folio-highlight">{{folio}}</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Campaña:&nbsp;&nbsp;</span>
+                    <span class="info-value">{{campaignName}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Institución de Interés:&nbsp;&nbsp;</span>
+                    <span class="info-value">{{iesName}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Primera Opción de Carrera:&nbsp;&nbsp;</span>
+                    <span class="info-value">{{firstChoice}}</span>
+                </div>
+            </div>
+            
+            <div class="message">
+                <strong>Próximos pasos:</strong>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Ingresa al siguiente enlace para continuar con el proceso de registro: 
+                        <br><br>
+                        <a href="{{registrationLink}}" style="color: #2563eb; font-weight: 600; text-decoration: none;">{{registrationLink}}</a>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <!-- Aviso de correo automático destacado -->
+        <div style="background: #fef3c7; padding: 20px 30px; text-align: center; border-top: 3px solid #f59e0b;">
+            <p style="margin: 0; font-size: 16px; font-weight: 700; color: #92400e;">
+                ⚠️ CORREO AUTOMÁTICO - NO RESPONDER
+            </p>
+            <p style="margin: 10px 0 0; font-size: 14px; color: #78350f; line-height: 1.6;">
+                Este mensaje fue generado automáticamente. Por favor, no responda a este correo electrónico.<br>
+                Si necesita asistencia, contacte directamente a la institución.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANUIES</strong></p>
+            <p>Asociación Nacional de Universidades e Instituciones de Educación Superior</p>
+            <p style="margin-top: 10px; color: #94a3b8;">
+                © {{currentYear}} ANUIES. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
