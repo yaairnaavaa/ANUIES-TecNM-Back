@@ -57,11 +57,39 @@ class CicloService {
   }
 
   async updateCiclo(id, data) {
-    const updatedCiclo = await this.cicloRepository.updateCiclo(id, data);
+    const ciclo = await this.cicloRepository.getCicloById(id);
 
-    if (!updatedCiclo) throw new Error("Error al actualizar ciclo");
+    if (!ciclo) throw new Error(`Ciclo con el id ${id} no existe`);
 
-    return updatedCiclo;
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    try {
+      if (data.active) {
+        await this.cicloRepository.desactivarCiclosEnInsercionNuevoCiclo(
+          ciclo._id,
+          session,
+        );
+      }
+
+      const updatedCiclo = await this.cicloRepository.updateCiclo(
+        id,
+        data,
+        session,
+      );
+
+      if (!updatedCiclo) throw new Error("Error al actualizar ciclo");
+
+      await session.commitTransaction();
+
+      return updatedCiclo;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
 }
 

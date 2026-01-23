@@ -18,7 +18,7 @@ class CicloRepository {
     return ciclo;
   }
 
-  async updateCiclo(id, data) {
+  async updateCiclo(id, data, session) {
     const updateObject = flatten(data);
 
     return await Ciclo.findByIdAndUpdate(
@@ -27,6 +27,7 @@ class CicloRepository {
         $set: updateObject,
       },
       {
+        session,
         new: true,
         runValidators: false,
       },
