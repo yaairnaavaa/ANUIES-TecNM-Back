@@ -16,10 +16,17 @@ class IES_Service {
   }
 
   async getCarrerasDeIES(id) {
-    return await this.IES_repository.getCarrerasDeIES(id);
+    const carrerasSnapshot = await this.IES_repository.getCarrerasDeIES(id);
+
+    if (!carrerasSnapshot) throw new Error(`IES con el id: ${id} no existe`);
+
+    const ids = carrerasSnapshot.careers.map((c) => c.carreraId);
+
+    return await this.carrerasRepository.getCarreras({ _id: { $in: ids } });
   }
 
   async actualizarCarreraDeIES(iesId, carreraNombre, data) {
+
     if (Object.keys(data).length === 1 && typeof data.active === "boolean") {
       const estado = data.active;
       return await this.deactivateCarreraDeIES(iesId, carreraNombre, estado);

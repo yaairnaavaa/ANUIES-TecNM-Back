@@ -3,7 +3,7 @@ const flatten = require("./../../../utils/flatten");
 
 class CarrerasRepository {
   async getCarreras(queryObject) {
-    return await Carrera.find();
+    return await Carrera.find(queryObject).select('-__v');
   }
 
   async getCarreraById(id) {

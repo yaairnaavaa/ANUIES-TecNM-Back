@@ -27,7 +27,7 @@ class IES_Controller {
 
     res.status(200).json({
       success: true,
-      count: carreras.length,
+      results: carreras.length,
       data: carreras,
     });
   });
@@ -104,7 +104,7 @@ class IES_Controller {
   updateIES = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    
+
     let updatedIes = await this.IES_service.updateIES(id, data);
 
     res.status(200).json({
