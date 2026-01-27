@@ -18,8 +18,8 @@ class IES_Service {
   }
 
   async getCarrerasDeIES(user, id) {
-    if (!haveAccessToIES(user, id))
-      throw new Error(`No tienes acceso a esta ies`);
+    // if (!haveAccessToIES(user, id))
+    //   throw new Error(`No tienes acceso a esta ies`);
 
     const ies = await this.IES_repository.getIESById(id);
 
@@ -103,8 +103,8 @@ class IES_Service {
   }
 
   async getIESById(user, id) {
-    if (!haveAccessToIES(user, id))
-      throw new Error(`No tienes acceso a esta ies`);
+    // if (!haveAccessToIES(user, id))
+    //   throw new Error(`No tienes acceso a esta ies`);
 
     const ies = await this.IES_repository.getIESById(id);
 
