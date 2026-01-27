@@ -30,24 +30,6 @@ class IES_Repository {
     return await IES.findById(id).select("careers -_id");
   }
 
-  async deactivateCarreraDeIES(iesId, carreraNombre, estado) {
-    return await IES.findOneAndUpdate(
-      {
-        _id: iesId,
-        "careers.name": `${carreraNombre}`,
-      },
-      {
-        $set: {
-          "careers.$.active": estado,
-        },
-      },
-      {
-        new: true,
-        runValidators: false,
-      },
-    );
-  }
-
   async getCarreraById(iesId, carreraId) {
     return await IES.findOne({
       _id: iesId,
@@ -59,7 +41,7 @@ async updateCareerName(iesId, carreraId, name, session) {
   return await IES.findOneAndUpdate(
     {
       _id: iesId,
-      "careers.carreraId": carreraId, // 🔑 clave
+      "careers.carreraId": carreraId, 
     },
     {
       $set: {

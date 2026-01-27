@@ -70,7 +70,7 @@ app.use(
   "/api/notifications",
   require("./src/modules/Notificaciones/notificaciones.routes"),
 );
-// app.use('/api/examples', require('./routes/exampleRoutes'));
+app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
 require("./models/MenuPermission");

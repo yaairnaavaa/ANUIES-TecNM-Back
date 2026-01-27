@@ -13,20 +13,21 @@ const router = express.Router();
 // router.put('/:id', updateIES);
 // router.delete('/:id', deleteIES);
 
-router.route("/").get(IES_controller.getAllIES).post(IES_controller.createIES);
+router
+  .route("/")
+  .get(protect, IES_controller.getAllIES)
+  .post(protect, authorize("Admin Nacional"), IES_controller.createIES);
 
 router
   .route("/:id")
-  .get(IES_controller.getIESById)
-  .patch(IES_controller.updateIES)
-  .delete(IES_controller.deactivateIES);
+  .get(protect, IES_controller.getIESById)
+  .patch(protect, IES_controller.updateIES)
+  .delete(protect, IES_controller.deactivateIES);
 
 //CUSTOM ROUTES
 router
   .route("/:id/carreras")
-  .get(IES_controller.getCarrerasDeIES)
-  .post(IES_controller.agregarCarreraDeIES);
-
-router.route("/:iesId/carreras/:carreraNombre");
+  .get(protect, IES_controller.getCarrerasDeIES)
+  .post(protect, IES_controller.agregarCarreraDeIES);
 
 module.exports = router;

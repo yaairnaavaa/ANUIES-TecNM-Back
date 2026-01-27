@@ -1,4 +1,9 @@
 const mongoose = require("mongoose");
+const {
+  scopeIESbyUser,
+  haveAccessToIES,
+  parseEditableFieldsForAdminIes,
+} = require("./../../policies/ies.policies");
 
 class IES_Service {
   constructor(IES_repository, carrerasRepository) {
@@ -6,56 +11,31 @@ class IES_Service {
     this.carrerasRepository = carrerasRepository;
   }
 
-  async getAllIES(queryObject) {
-    // // Si es Admin IES u Operativo, solo puede ver su IES
-    // if (req.user && ["Admin IES", "Operativo IES"].includes(req.user.role)) {
-    //   query = query.where("_id").equals(req.user.ies);
-    // }
+  async getAllIES(user, queryObject) {
+    const queryScope = scopeIESbyUser(user);
 
-    return await this.IES_repository.getAllIES(queryObject);
+    return await this.IES_repository.getAllIES(queryScope);
   }
 
-  async getCarrerasDeIES(id) {
-    const carrerasSnapshot = await this.IES_repository.getCarrerasDeIES(id);
+  async getCarrerasDeIES(user, id) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
 
-    if (!carrerasSnapshot) throw new Error(`IES con el id: ${id} no existe`);
+    const ies = await this.IES_repository.getIESById(id);
+
+    if (!ies) throw new Error(`IES con el id: ${id} no existe`);
+
+    const carrerasSnapshot = await this.IES_repository.getCarrerasDeIES(id);
 
     const ids = carrerasSnapshot.careers.map((c) => c.carreraId);
 
     return await this.carrerasRepository.getCarreras({ _id: { $in: ids } });
   }
 
-  async actualizarCarreraDeIES(iesId, carreraNombre, data) {
+  async agregarCarreraDeIES(user, iesId, dataCarrera) {
+    if (!haveAccessToIES(user, iesId))
+      throw new Error(`No tienes acceso a esta ies`);
 
-    if (Object.keys(data).length === 1 && typeof data.active === "boolean") {
-      const estado = data.active;
-      return await this.deactivateCarreraDeIES(iesId, carreraNombre, estado);
-    }
-
-    // throw new Error(
-    //   "No se pudo actualizar la carrera por el momento. Intenta mas tarde",
-    // );
-  }
-
-  async deactivateCarreraDeIES(iesId, carreraNombre, estado) {
-    const deactivatedCareer = await this.IES_repository.deactivateCarreraDeIES(
-      iesId,
-      carreraNombre,
-      estado,
-    );
-
-    if (deactivatedCareer) return estado;
-
-    await this.getIESById(iesId);
-
-    await this.getCarreraByName(iesId, carreraNombre);
-
-    throw new Error(
-      "No se pudo desactivar la carrera por el momento. Intenta mas tarde",
-    );
-  }
-
-  async agregarCarreraDeIES(iesId, dataCarrera) {
     const ies = await this.IES_repository.getIESById(iesId);
 
     if (!ies) throw new Error(`IES con el id ${iesId} no existe`);
@@ -122,7 +102,10 @@ class IES_Service {
     return carrera;
   }
 
-  async getIESById(id) {
+  async getIESById(user, id) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
+
     const ies = await this.IES_repository.getIESById(id);
 
     if (!ies) throw new Error(`IES con id: ${id} no existe`);
@@ -141,26 +124,17 @@ class IES_Service {
     return await this.IES_repository.createIES(data);
   }
 
-  async updateIES(id, data) {
-    // // Verificar permisos
-    // if (req.user.role === 'Admin IES') {
-    //   if (req.user.ies.toString() !== ies._id.toString()) {
-    //     return res.status(403).json({
-    //       success: false,
-    //       message: 'No tienes permiso para actualizar esta IES'
-    //     });
-    //   }
-
-    //   // Admin IES no puede cambiar ciertos campos críticos
-    //   delete req.body.code;
-    //   delete req.body.active;
-    // }
+  async updateIES(user, id, data) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
 
     const ies = await this.IES_repository.getIESById(id);
 
     if (!ies) throw new Error(`IES con id: ${id} no existe`);
 
-    const updatedIES = await this.IES_repository.updateIES(id, data);
+    const parsedData = parseEditableFieldsForAdminIes(user, data);
+
+    const updatedIES = await this.IES_repository.updateIES(id, parsedData);
 
     if (!updatedIES)
       throw new Error("No se pudo actualizar el IES. Intenta mas tarde");

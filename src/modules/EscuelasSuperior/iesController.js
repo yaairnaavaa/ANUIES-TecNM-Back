@@ -9,7 +9,8 @@ class IES_Controller {
   // // @route   GET /api/ies
   // // @access  Public (con filtros si está autenticado)
   getAllIES = asyncHandler(async (req, res) => {
-    const allIES = await this.IES_service.getAllIES();
+    const loggedUser = req.user;
+    const allIES = await this.IES_service.getAllIES(loggedUser);
 
     res.status(200).json({
       success: true,
@@ -23,7 +24,9 @@ class IES_Controller {
   // // @access  Public (con filtros si está autenticado)
   getCarrerasDeIES = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const carreras = await this.IES_service.getCarrerasDeIES(id);
+
+    const { user } = req;
+    const carreras = await this.IES_service.getCarrerasDeIES(user, id);
 
     res.status(200).json({
       success: true,
@@ -38,8 +41,10 @@ class IES_Controller {
   agregarCarreraDeIES = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const dataCarrera = req.body;
+    const { user } = req;
 
     const createdCareer = await this.IES_service.agregarCarreraDeIES(
+      user,
       id,
       dataCarrera,
     );
@@ -50,33 +55,14 @@ class IES_Controller {
     });
   });
 
-  // // @desc    Actualizar una carreras de una IES
-  // // @route   patch /api/ies:iesId/carreras/:carreraNombre
-  // // @access  Public (con filtros si está autenticado)
-  actualizarCarreraDeIES = asyncHandler(async (req, res) => {
-    const { iesId, carreraNombre } = req.params;
-    const data = req.body;
-
-    const updatedCarrera = await this.IES_service.actualizarCarreraDeIES(
-      iesId,
-      carreraNombre,
-      data,
-    );
-
-    res.status(200).json({
-      success: true,
-      message: `Carrera actualizada`,
-      data: updatedCarrera,
-    });
-  });
-
   // // @desc    Obtener una IES por ID
   // // @route   GET /api/ies/:id
   // // @access  Private
   getIESById = asyncHandler(async (req, res) => {
     const { id } = req.params;
+    const { user } = req;
 
-    const ies = await this.IES_service.getIESById(id);
+    const ies = await this.IES_service.getIESById(user, id);
 
     res.status(200).json({
       success: true,
@@ -104,8 +90,9 @@ class IES_Controller {
   updateIES = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const data = req.body;
+    const { user } = req;
 
-    let updatedIes = await this.IES_service.updateIES(id, data);
+    let updatedIes = await this.IES_service.updateIES(user, id, data);
 
     res.status(200).json({
       success: true,
@@ -129,28 +116,3 @@ class IES_Controller {
 }
 
 module.exports = IES_Controller;
-
-// // @desc    Obtener carreras de una IES
-// // @route   GET /api/ies/:id/careers
-// // @access  Public
-// exports.getIESCareers = asyncHandler(async (req, res) => {
-//   const ies = await IES.findById(req.params.id).select('name careers');
-
-//   if (!ies) {
-//     return res.status(404).json({
-//       success: false,
-//       message: 'IES no encontrada'
-//     });
-//   }
-
-//   // Filtrar solo carreras activas
-//   const activeCareers = ies.careers.filter(career => career.active);
-
-//   res.status(200).json({
-//     success: true,
-//     data: {
-//       iesName: ies.name,
-//       careers: activeCareers
-//     }
-//   });
-// });
