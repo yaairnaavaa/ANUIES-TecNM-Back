@@ -42,7 +42,7 @@ class IES_Controller {
     const { id } = req.params;
     const page = await this.IES_service.getHTMLpage(id);
 
-    res.status(200).set("Content-type", "text/html").send(page);
+    res.status(200).set("Content-type", "text/html").send(`${page}`);
   });
 
   // // @desc   Insertar carreras a una IES
