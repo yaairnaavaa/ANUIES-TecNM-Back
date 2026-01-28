@@ -7,14 +7,14 @@ const router = Router();
 
 router
   .route("/")
-  .get(protect, cicloController.getCiclos)
-  .post(protect, authorize("Admin Nacional"), cicloController.createCiclo);
+  .get(cicloController.getCiclos)
+  .post(cicloController.createCiclo);
 
 router.get("/currentActive", cicloController.getCurrentCicleActive);
 
 router
   .route("/:id")
-  .get(protect, cicloController.getCicloById)
-  .patch(protect, authorize("Admin Nacional"), cicloController.updateCiclo);
+  .get(cicloController.getCicloById)
+  .patch(cicloController.updateCiclo);
 
 module.exports = router;

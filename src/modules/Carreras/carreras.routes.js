@@ -6,14 +6,14 @@ const router = Router();
 
 router
   .route("/")
-  .get(protect, carrerasController.getCarreras)
-  .post(protect, authorize("Admin Nacional"), carrerasController.createCarrera);
+  .get(carrerasController.getCarreras)
+  .post(carrerasController.createCarrera);
 
 router
   .route("/:id")
-  .get(protect, carrerasController.getCarreraById)
-  .patch(protect, authorize("Admin Nacional"), carrerasController.updateCarrera);
+  .get(carrerasController.getCarreraById)
+  .patch(carrerasController.updateCarrera);
 
-router.route("/:id/deactivate").patch(protect, authorize("Admin Nacional"), carrerasController.deactivateCarreraById);
+router.route("/:id/deactivate").patch(carrerasController.deactivateCarreraById);
 
 module.exports = router;

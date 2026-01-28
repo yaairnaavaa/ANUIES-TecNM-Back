@@ -5,6 +5,6 @@ const { protect } = require("./../../middleware/auth");
 
 const router = Router();
 
-router.route("/emailCampaign").post(protect, notificacionesController.sendEmailCampaign);
+router.route("/emailCampaign").post(notificacionesController.sendEmailCampaign);
 
 module.exports = router;

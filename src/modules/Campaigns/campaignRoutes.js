@@ -8,14 +8,14 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(protect, campaignController.getAllCampaigns)
-  .post(protect, authorize("Admin Nacional"), campaignController.createCampaign);
+  .get(campaignController.getAllCampaigns)
+  .post(campaignController.createCampaign);
 
 router
   .route("/:id")
-  .get(protect, campaignController.getCampaignById)
-  .delete(protect, authorize("Admin Nacional"), campaignController.deactivateCampaign)
-  .patch(protect, authorize("Admin Nacional"), campaignController.updateCampaign);
+  .get(campaignController.getCampaignById)
+  .delete(campaignController.deactivateCampaign)
+  .patch(campaignController.updateCampaign);
 
 // Todas las rutas públicas
 // router.get('/', getAllCampaigns);
