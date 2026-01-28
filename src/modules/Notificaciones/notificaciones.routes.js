@@ -1,6 +1,7 @@
 const { Router } = require("express");
 
-const { notificacionesController } = require("./../../../bootstrap");
+//const { notificacionesController } = require("./../../../bootstrap");
+const { notificacionesController } = require("./bootstrap");
 //const { protect } = require("./../../middleware/auth");
 
 const router = Router();
