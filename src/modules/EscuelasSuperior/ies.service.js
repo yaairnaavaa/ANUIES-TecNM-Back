@@ -120,6 +120,17 @@ class IES_Service {
     return ies;
   }
 
+  async getHTMLpage(id) {
+    let page = await this.IES_repository.getHTMLpage(id);
+
+    console.log(page === undefined);
+
+    if (page.length < 1)
+      throw new Error("Esta ies aún no tiene una pagina definida");
+
+    return page;
+  }
+
   async createIES(data) {
     return await this.IES_repository.createIES(data);
   }

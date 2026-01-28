@@ -36,6 +36,16 @@ class IES_Controller {
   });
 
   // // @desc   Insertar carreras a una IES
+  // // @route   get /api/ies:id/htmlPage
+  // // @access  Public (con filtros si está autenticado)
+  getHTMLpage = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const page = await this.IES_service.getHTMLpage(id);
+
+    res.status(200).set("Content-type", "text/html").send(page);
+  });
+
+  // // @desc   Insertar carreras a una IES
   // // @route   POST /api/ies:id/carreras
   // // @access  Public (con filtros si está autenticado)
   agregarCarreraDeIES = asyncHandler(async (req, res) => {

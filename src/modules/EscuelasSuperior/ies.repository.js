@@ -37,23 +37,23 @@ class IES_Repository {
     });
   }
 
-async updateCareerName(iesId, carreraId, name, session) {
-  return await IES.findOneAndUpdate(
-    {
-      _id: iesId,
-      "careers.carreraId": carreraId, 
-    },
-    {
-      $set: {
-        "careers.$.carreraName": name,
+  async updateCareerName(iesId, carreraId, name, session) {
+    return await IES.findOneAndUpdate(
+      {
+        _id: iesId,
+        "careers.carreraId": carreraId,
       },
-    },
-    {
-      new: true,
-      session,
-    }
-  );
-}
+      {
+        $set: {
+          "careers.$.carreraName": name,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+  }
 
   async addCarreraIES(iesId, carrera, session) {
     return await IES.findByIdAndUpdate(
@@ -101,6 +101,15 @@ async updateCareerName(iesId, carreraId, name, session) {
     return await IES.findByIdAndUpdate(id, {
       active: false,
     });
+  }
+
+  async getHTMLpage(id) {
+    return await IES.findOne(
+      {
+        _id: id,
+      },
+      { "branding.htmlPage": 1, _id: 0 },
+    );
   }
 }
 

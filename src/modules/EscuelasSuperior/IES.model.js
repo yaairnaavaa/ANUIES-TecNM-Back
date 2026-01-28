@@ -82,6 +82,9 @@ const iesSchema = new mongoose.Schema(
         type: String,
         default: "Arial, sans-serif",
       },
+      htmlPage: {
+        type: String,
+      }
     },
     configuration: {
       enrollmentPeriod: {
