@@ -9,7 +9,7 @@ require("dotenv").config();
 const connectDB = require("./config/database");
 const errorHandler = require("./src/middleware/errorHandler");
 
-// Conectar a la base de datos
+// Conectar a la base de datos (en Vercel no se hace process.exit si falla; ver config/database.js)
 connectDB();
 
 const app = express();
@@ -87,12 +87,14 @@ app.use((req, res) => {
 // Manejo de errores (debe ir al final)
 app.use(errorHandler);
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-  console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
-  console.log(`URL Base API: http://localhost:${PORT}/api`);
-});
+// En Vercel se exporta la app como serverless; en local se inicia el servidor
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
+    console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
+    console.log(`URL Base API: http://localhost:${PORT}/api`);
+  });
+}
 
 module.exports = app;

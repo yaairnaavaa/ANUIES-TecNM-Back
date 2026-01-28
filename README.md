@@ -103,6 +103,19 @@ Para crear un nuevo módulo (por ejemplo, "User"):
 
 - **nodemon**: Reinicio automático del servidor en desarrollo
 
+## 🚀 Despliegue en Vercel
+
+El proyecto incluye `vercel.json` para funcionar como función serverless. Pasos:
+
+1. Conectar el repositorio a Vercel y desplegar.
+2. **Variables de entorno** (en el dashboard de Vercel → Settings → Environment Variables):
+   - `MONGODB_URI`: URI de tu base MongoDB (obligatoria).
+   - `JWT_SECRET`: secreto para los tokens (obligatoria si usas auth).
+   - `ALLOWED_ORIGINS`: orígenes permitidos para CORS (opcional, por defecto `*`).
+   - Las que use el módulo de notificaciones (Mailjet): `API_KEY`, `SECRET_KEY`, `MAILJET_FROM_EMAIL`, etc.
+
+Sin `MONGODB_URI` la función arranca pero las rutas que usan base de datos devolverán error.
+
 ## 📄 Licencia
 
 ISC

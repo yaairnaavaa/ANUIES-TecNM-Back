@@ -24,7 +24,11 @@ const connectDB = async () => {
 
   } catch (error) {
     console.error('Error al conectar con MongoDB:', error.message);
-    process.exit(1);
+    // En Vercel (serverless) no usar process.exit para no tumbar la función
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
+    // En Vercel solo registrar; las peticiones devolverán error hasta que MONGODB_URI esté configurado
   }
 };
 
