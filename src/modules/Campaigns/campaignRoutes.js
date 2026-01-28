@@ -1,6 +1,6 @@
 const express = require("express");
 
-// const { protect, authorize } = require("./../../middleware/auth");
+const { protect, authorize } = require("./../../middleware/auth");
 
 const { campaignController } = require("./../../../bootstrap");
 
@@ -8,14 +8,14 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(campaignController.getAllCampaigns)
-  .post(campaignController.createCampaign);
+  .get(protect, campaignController.getAllCampaigns)
+  .post(protect, authorize("Admin Nacional"), campaignController.createCampaign);
 
 router
   .route("/:id")
-  .get(campaignController.getCampaignById)
-  .delete(campaignController.deactivateCampaign)
-  .patch(campaignController.updateCampaign);
+  .get(protect, campaignController.getCampaignById)
+  .delete(protect, authorize("Admin Nacional"), campaignController.deactivateCampaign)
+  .patch(protect, authorize("Admin Nacional"), campaignController.updateCampaign);
 
 // Todas las rutas públicas
 // router.get('/', getAllCampaigns);

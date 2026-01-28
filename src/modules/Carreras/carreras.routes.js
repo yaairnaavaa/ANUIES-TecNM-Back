@@ -1,18 +1,19 @@
 const { Router } = require("express");
+const { protect, authorize } = require("./../../middleware/auth");
 const { carrerasController } = require("./../../../bootstrap");
 
 const router = Router();
 
 router
   .route("/")
-  .get(carrerasController.getCarreras)
-  .post(carrerasController.createCarrera);
+  .get(protect, carrerasController.getCarreras)
+  .post(protect, authorize("Admin Nacional"), carrerasController.createCarrera);
 
 router
   .route("/:id")
-  .get(carrerasController.getCarreraById)
-  .patch(carrerasController.updateCarrera);
+  .get(protect, carrerasController.getCarreraById)
+  .patch(protect, authorize("Admin Nacional"), carrerasController.updateCarrera);
 
-router.route("/:id/deactivate").patch(carrerasController.deactivateCarreraById);
+router.route("/:id/deactivate").patch(protect, authorize("Admin Nacional"), carrerasController.deactivateCarreraById);
 
 module.exports = router;
