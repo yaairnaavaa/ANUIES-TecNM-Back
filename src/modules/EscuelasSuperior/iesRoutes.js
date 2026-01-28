@@ -30,6 +30,6 @@ router
   .get(protect, IES_controller.getCarrerasDeIES)
   .post(protect, IES_controller.agregarCarreraDeIES);
 
-router.route("/:id/htmlPage").get(protect, IES_controller.getHTMLpage);
+router.route("/:id/htmlPage").get(protect, IES_controller.getHTMLpage).post(IES_controller.addHTMLpage);
 
 module.exports = router;

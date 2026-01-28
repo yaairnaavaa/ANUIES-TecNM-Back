@@ -5,6 +5,8 @@ const {
   parseEditableFieldsForAdminIes,
 } = require("./../../policies/ies.policies");
 
+const validateAndCleanHTML = require("./../../../utils/cleanHtml");
+
 class IES_Service {
   constructor(IES_repository, carrerasRepository) {
     this.IES_repository = IES_repository;
@@ -123,12 +125,20 @@ class IES_Service {
   async getHTMLpage(id) {
     let page = await this.IES_repository.getHTMLpage(id);
 
-    console.log(page === undefined);
+    console.log(page);
 
-    if (page.length < 1)
+    if (!page.branding?.htmlPage)
       throw new Error("Esta ies aún no tiene una pagina definida");
 
-    return page;
+    return page.branding.htmlPage;
+  }
+
+  async addHTMLpage(id, data) {
+    const sanitizateHTML = validateAndCleanHTML(data);
+
+    const addedPage = await this.IES_repository.addHTMLpage(id, sanitizateHTML);
+
+    return addedPage;
   }
 
   async createIES(data) {

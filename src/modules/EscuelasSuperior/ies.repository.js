@@ -111,6 +111,17 @@ class IES_Repository {
       { "branding.htmlPage": 1, _id: 0 },
     );
   }
+
+  async addHTMLpage(id, data) {
+    return await IES.findByIdAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $set: { "branding.htmlPage": data },
+      },
+    );
+  }
 }
 
 module.exports = IES_Repository;
