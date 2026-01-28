@@ -59,7 +59,7 @@ app.use("/api/roles", require("./routes/roleRoutes"));
 app.use("/api/permissions", require("./routes/permissionRoutes"));
 app.use("/api/menupermissions", require("./routes/menuPermissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
-app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));//si
+//app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));//si
 //app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));//si
 //app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
 //app.use("/api/cycles", require("./src/modules/Ciclos/ciclo.routes"));
