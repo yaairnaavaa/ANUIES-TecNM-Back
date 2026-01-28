@@ -1,6 +1,6 @@
 exports.scopeIESbyUser = (user) => {
   console.log("user from polici", user);
-  if (!user) throw new Error("Not user provided");
+  if (!user) return {}; // Sin usuario, mostrar todas las IES
 
   // // Si es Admin IES u Operativo, solo puede ver su IES
   if (["Admin IES", "Operativo IES"].includes(user.role.name)) {
@@ -13,7 +13,7 @@ exports.scopeIESbyUser = (user) => {
 };
 
 exports.haveAccessToIES = (user, id) => {
-  if (!user) throw new Error("Not user provided");
+  if (!user) return true; // Sin autenticación, permitir acceso
 
   if (user.role?.name === "Admin Nacional") return true;
 
@@ -23,7 +23,7 @@ exports.haveAccessToIES = (user, id) => {
 };
 
 exports.parseEditableFieldsForAdminIes = (user, data) => {
-  if (!user) throw new Error("Not user provided");
+  if (!user) return { ...data }; // Sin usuario, permitir todos los campos
 
   if (user.role?.name === "Admin Nacional") return { ...data };
 
