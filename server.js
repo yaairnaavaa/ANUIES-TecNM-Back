@@ -61,7 +61,7 @@ app.use("/api/menupermissions", require("./routes/menuPermissionRoutes"));
 app.use("/api/periods", require("./routes/periodRoutes"));
 //app.use("/api/ies", require("./src/modules/EscuelasSuperior/iesRoutes"));
 //app.use("/api/iems", require("./src/modules/EscuelasMediaSuperior/iemsRoutes"));
-app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
+//app.use("/api/campaigns", require("./src/modules/Campaigns/campaignRoutes"));
 //app.use("/api/cycles", require("./src/modules/Ciclos/ciclo.routes"));
 //app.use("/api/prospects", require("./routes/prospectRoutes"));
 //app.use("/api/users", require("./src/modules/Users/user.routes"));
