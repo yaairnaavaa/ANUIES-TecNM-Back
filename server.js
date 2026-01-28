@@ -65,9 +65,9 @@ app.use("/api/periods", require("./routes/periodRoutes"));
 //app.use("/api/cycles", require("./src/modules/Ciclos/ciclo.routes"));
 //app.use("/api/prospects", require("./routes/prospectRoutes"));
 //app.use("/api/users", require("./src/modules/Users/user.routes"));
-//app.use("/api/careers", require("./src/modules/Carreras/carreras.routes"));
+app.use("/api/careers", require("./src/modules/Carreras/carreras.routes"));//---
 //app.use("/api/notifications",require("./src/modules/Notificaciones/notificaciones.routes"));//si
-app.use('/api/examples', require('./routes/exampleRoutes'));//si
+app.use('/api/examples', require('./routes/exampleRoutes'));
 
 // === REGISTRO GLOBAL DE MODELOS ===
 require("./models/MenuPermission");
