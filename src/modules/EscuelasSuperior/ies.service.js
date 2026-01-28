@@ -5,7 +5,7 @@ const {
   parseEditableFieldsForAdminIes,
 } = require("./../../policies/ies.policies");
 
-const validateAndCleanHTML = require("./../../../utils/cleanHtml");
+//const validateAndCleanHTML = require("./../../../utils/cleanHtml");
 
 class IES_Service {
   constructor(IES_repository, carrerasRepository) {
@@ -134,6 +134,7 @@ class IES_Service {
   }
 
   async addHTMLpage(id, data) {
+    return;
     const sanitizateHTML = validateAndCleanHTML(data);
 
     const addedPage = await this.IES_repository.addHTMLpage(id, sanitizateHTML);
