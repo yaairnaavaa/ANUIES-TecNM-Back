@@ -71,9 +71,9 @@ app.use("/api/careers", require("./src/modules/Carreras/carreras.routes"));
 
 // === REGISTRO GLOBAL DE MODELOS ===
 require("./models/MenuPermission");
-// require("./models/Role");
-// require("./models/User");
-// require("./models/Period"); // si existe
+require("./models/Role");
+require("./models/User");
+require("./models/Period"); // si existe
 require("./models/Prospect"); // si existe
 
 // Manejo de rutas no encontradas
