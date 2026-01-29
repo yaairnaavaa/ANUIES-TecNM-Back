@@ -1,38 +1,43 @@
 const mongoose = require("mongoose");
-const { validateCURP } = require('../utils/curpValidator');
+const { validateCURP } = require("../utils/curpValidator");
+const validator = require("validator");
 
 const prospectSchema = new mongoose.Schema(
   {
-    // ======================
-    // DATOS PERSONALES
-    // ======================
-    fullName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
-
+    fatherLastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    motherLastName: {
+      type: String,
+      trim: true,
+    },
     birthDate: Date,
-
     gender: {
       type: String,
       enum: ["Masculino", "Femenino", "Otro", "Prefiero no decir"],
       default: "Prefiero no decir",
     },
-
     curp: {
       type: String,
       uppercase: true,
       trim: true,
       validate: {
-        validator: function(v) {
+        validator: function (v) {
           if (!v) return true; // CURP es opcional
           return validateCURP(v);
         },
-        message: 'CURP no tiene un formato válido'
-      }
+        message: "CURP no tiene un formato válido",
+      },
+      unique: true,
+      required: [true, "Ingresa tu CURP"],
     },
-
     // ======================
     // CONTACTO
     // ======================
@@ -41,8 +46,17 @@ const prospectSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
       trim: true,
+      validate: [validator.isEmail, "Ingresa un Email válido"],
     },
-
+    address: {
+      street: String,
+      number: String,
+      neighborhood: String,
+      locality: String,
+      municipality: String,
+      state: String,
+      postalCode: String,
+    },
     phone: {
       mobile: {
         type: String,
@@ -60,7 +74,7 @@ const prospectSchema = new mongoose.Schema(
 
     originIEMS: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'IEMS'
+      ref: "IEMS",
     },
 
     currentSemester: String,
@@ -72,9 +86,7 @@ const prospectSchema = new mongoose.Schema(
       min: 0,
       max: 10,
     },
-
     estimatedGraduationDate: Date,
-
     // ======================
     // INTERÉS ACADÉMICO
     // ======================
@@ -86,25 +98,16 @@ const prospectSchema = new mongoose.Schema(
 
     careerInterests: [
       {
-        career: {
-          type: String,
-          required: true,
-        },
-        priority: {
-          type: Number,
-          min: 1,
-          max: 3,
-        },
+        career: { type: String, required: true },
+        priority: { type: Number, required: true, min: 1, max: 3 },
       },
     ],
-
     interestedShift: [
       {
         type: String,
         enum: ["Matutino", "Vespertino", "Nocturno"],
       },
     ],
-
     // ======================
     // MARKETING
     // ======================
@@ -120,12 +123,10 @@ const prospectSchema = new mongoose.Schema(
         "Otro",
       ],
     },
-
     originCampaign: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Campaign",
     },
-
     // ======================
     // ESTADO
     // ======================
@@ -134,13 +135,12 @@ const prospectSchema = new mongoose.Schema(
       default: "active",
     },
     processStatus: {
-      type: Object,
-      default: () => ({
-        registrationComplete: false,
-        profileValidated: false,
-        readNotifications: [],
-        lastInteraction: null,
-      }),
+      registrationComplete: { type: Boolean, default: false },
+      profileValidated: { type: Boolean, default: false },
+      readNotifications: [
+        { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
+      ],
+      lastInteraction: { type: Date, default: null },
     },
     active: {
       type: Boolean,
@@ -149,18 +149,25 @@ const prospectSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 
-prospectSchema.index({ email: 1 });
+prospectSchema.index({ email: 1 }, { unique: true });
+prospectSchema.index({ curp: 1 }, { unique: true });
+prospectSchema.index({
+  fatherLastName: 1,
+  motherLastName: 1,
+  name: 1,
+});
 
 prospectSchema.methods.verifyRegistrationComplete = function () {
   const requiredFields = [
-    this.firstName,
-    this.lastName,
+    this.name,
+    this.fatherLastName,
     this.email,
     this.phone?.mobile,
-    this.address?.postalCode,
     this.originIEMS,
     this.firstChoiceIES,
     Array.isArray(this.careerInterests) && this.careerInterests.length > 0,
@@ -169,5 +176,11 @@ prospectSchema.methods.verifyRegistrationComplete = function () {
   this.processStatus.registrationComplete = requiredFields.every(Boolean);
   return this.processStatus.registrationComplete;
 };
+
+prospectSchema.virtual("fullName").get(function () {
+  return this.motherLastName
+    ? `${this.name} ${this.fatherLastName} ${this.motherLastName}`
+    : `${this.name} ${this.fatherLastName}`;
+});
 
 module.exports = mongoose.model("Prospect", prospectSchema);

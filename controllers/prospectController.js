@@ -47,7 +47,7 @@ exports.registerProspect = asyncHandler(async (req, res) => {
 // @route   PUT /api/prospects/:id/profile
 // @access  Public (con el ID del interesado)
 exports.updateProspectProfile = asyncHandler(async (req, res) => {
-  let prospect = await Prospect.findById(req.params.id);
+  const prospect = await Prospect.findById(req.params.id);
 
   if (!prospect) {
     return res.status(404).json({
@@ -56,24 +56,26 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
     });
   }
 
-  // Actualizar campos permitidos
   const allowedFields = [
-    "firstName",
-    "lastName",
-    "secondLastName",
+    "name",
+    "fatherLastName",
+    "motherLastName",
     "curp",
-    "phone",
-    "address",
-    "iemsCareer",
-    "iemsAverage",
-    "currentSemester",
-    "estimatedGraduationDate",
-    "careerInterests",
-    "socialMedia",
-    "personalInterests",
+    "birthDate",
+    "gender",
+    "email",
+    "phone.mobile",
+    "address.street",
+    "address.number",
+    "address.neighborhood",
+    "address.municipality",
+    "address.state",
+    "address.postalCode",
+    "originIEMSName",
+    "technicalMajor",
+    "processStatus.lastInteraction",
   ];
 
-  // Validar CURP si se está actualizando
   if (req.body.curp && !validateCURP(req.body.curp)) {
     return res.status(400).json({
       success: false,
@@ -81,17 +83,17 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
     });
   }
 
-  allowedFields.forEach((field) => {
-    if (req.body[field] !== undefined) {
-      prospect[field] = req.body[field];
+  const update = {};
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      update[key] = req.body[key];
     }
-  });
+  }
 
-  // Verificar si el registro está completo
-  prospect.verifyRegistrationComplete();
+  prospect.set(update);
 
-  // Promover clasificación si aplica
-  prospect.promoteClassification();
+  prospect.processStatus.registrationComplete =
+    prospect.verifyRegistrationComplete();
 
   await prospect.save();
 
@@ -101,7 +103,6 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
     data: {
       id: prospect._id,
       fullName: prospect.fullName,
-      classification: prospect.classification,
       registrationComplete: prospect.processStatus.registrationComplete,
     },
   });
