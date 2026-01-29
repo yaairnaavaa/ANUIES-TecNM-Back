@@ -58,41 +58,41 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
     });
   }
 
-  const allowedFields = [
-    "name",
-    "fatherLastName",
-    "motherLastName",
-    "curp",
-    "birthDate",
-    "gender",
-    "email",
-    "phone.mobile",
-    "address.street",
-    "address.number",
-    "address.neighborhood",
-    "address.municipality",
-    "address.state",
-    "address.postalCode",
-    "originIEMSName",
-    "technicalMajor",
-    "processStatus.lastInteraction",
-  ];
+  // const allowedFields = [
+  //   "name",
+  //   "fatherLastName",
+  //   "motherLastName",
+  //   "curp",
+  //   "birthDate",
+  //   "gender",
+  //   "email",
+  //   "phone.mobile",
+  //   "address.street",
+  //   "address.number",
+  //   "address.neighborhood",
+  //   "address.municipality",
+  //   "address.state",
+  //   "address.postalCode",
+  //   "originIEMSName",
+  //   "technicalMajor",
+  //   "processStatus.lastInteraction",
+  // ];
 
-  if (req.body.curp && !validateCURP(req.body.curp)) {
-    return res.status(400).json({
-      success: false,
-      message: "El formato de la CURP no es válido",
-    });
-  }
+  // if (req.body.curp && !validateCURP(req.body.curp)) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: "El formato de la CURP no es válido",
+  //   });
+  // }
 
-  const update = {};
-  for (const key in req.body) {
-    if (allowedFields.includes(key)) {
-      update[key] = req.body[key];
-    }
-  }
+  // const update = {};
+  // for (const key in req.body) {
+  //   if (allowedFields.includes(key)) {
+  //     update[key] = req.body[key];
+  //   }
+  // }
 
-  prospect.set(update);
+  prospect.set(req.body);
 
   prospect.processStatus.registrationComplete =
     prospect.verifyRegistrationComplete();
