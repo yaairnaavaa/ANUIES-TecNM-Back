@@ -120,6 +120,7 @@ class IES_Repository {
       {
         $set: { "branding.htmlPage": data },
       },
+      { new: true },
     );
   }
 }

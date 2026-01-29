@@ -134,12 +134,15 @@ class IES_Service {
   }
 
   async addHTMLpage(id, data) {
-    return;
-    const sanitizateHTML = validateAndCleanHTML(data);
+    const addedPage = await this.IES_repository.addHTMLpage(id, data);
 
-    const addedPage = await this.IES_repository.addHTMLpage(id, sanitizateHTML);
+    if (addedPage) return addedPage;
 
-    return addedPage;
+    const iesExists = await this.IES_repository.getIESById(id);
+
+    if (!iesExists) throw new Error(`Ies con el id ${id} no existe`);
+
+    throw new Error("Error al actualizar. Intenta mas tarde");
   }
 
   async createIES(data) {
