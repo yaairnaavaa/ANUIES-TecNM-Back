@@ -95,14 +95,13 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 
   if (data.observations) {
     await Prospect.findByIdAndUpdate(
+      req.params.id,
+      { observations: data.observations },
       {
-        _id: req.params.id,
+        new: true,
       },
-      {
-        $addToSet: { observations: data.observations },
-      },
-      { new: true },
     );
+
     delete data.observations;
   }
 

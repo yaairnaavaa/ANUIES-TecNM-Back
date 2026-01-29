@@ -71,7 +71,7 @@ const prospectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    observations: [String],
+    observations: String,
     originIEMS: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "IEMS",
