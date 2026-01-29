@@ -1,6 +1,7 @@
 const Prospect = require("../models/Prospect");
 const asyncHandler = require("./../src/middleware/asyncHandler");
 const { validateCURP } = require("./../utils/curpValidator");
+const IES = require("./../src/modules/EscuelasSuperior/IES.model");
 
 // @desc    Registrar nuevo interesado (público)
 // @route   POST /api/prospects/register
@@ -97,13 +98,19 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 
   await prospect.save();
 
+  const IESdelProspecto = prospect.firstChoiceIES;
+
+  console.log("la ies es: ", IESdelProspecto);
+
+  const IEShtml = await IES.findOne(IESdelProspecto).select(
+    "branding.htmlPage -_id",
+  );
+
   res.status(200).json({
     success: true,
     message: "Perfil actualizado correctamente",
     data: {
-      id: prospect._id,
-      fullName: prospect.fullName,
-      registrationComplete: prospect.processStatus.registrationComplete,
+      page: IEShtml.branding?.htmlPage,
     },
   });
 });
