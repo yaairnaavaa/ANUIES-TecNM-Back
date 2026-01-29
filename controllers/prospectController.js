@@ -91,11 +91,25 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
   //     update[key] = req.body[key];
   //   }
   // }
+  const data = req.body;
 
-  prospect.set(req.body);
+  if (data.observations) {
+    await Prospect.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $addToSet: { observations: data.observations },
+      },
+      { new: true },
+    );
+    delete data.observations;
+  }
 
-  prospect.processStatus.registrationComplete =
-    prospect.verifyRegistrationComplete();
+  prospect.set(data);
+
+  // prospect.processStatus.registrationComplete =
+  //   prospect.verifyRegistrationComplete();
 
   await prospect.save();
 
