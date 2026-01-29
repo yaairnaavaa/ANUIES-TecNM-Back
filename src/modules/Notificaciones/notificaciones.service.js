@@ -36,7 +36,7 @@ class NotificacionesService {
 
         try {
             // Construir la URL de registro con el ID del prospecto
-            const registrationLink = `https://anuies-front.vercel.app/registerStudent/${prospectId}`;
+            const registrationLink = `${process.env.ANUIES_FRONT_URL}/registerStudent/${prospectId}`;
             
             // Generar contenido HTML con los datos del prospecto
             const htmlContent = this.renderEmailTemplate({
