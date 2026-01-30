@@ -9,15 +9,8 @@ const CicloEscuelas = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-
-    code: {
-      type: String,
-      required: true,
       unique: true,
-      trim: true,
     },
-
     description: {
       type: String,
       trim: true,
