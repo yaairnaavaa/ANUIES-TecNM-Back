@@ -25,9 +25,9 @@ const CarrerasController = require("./src/modules/Carreras/carreras.controller.j
 const NotificacionesService = require("./src/modules/Notificaciones/notificaciones.service.js");
 const NotificacionesController = require("./src/modules/Notificaciones/notificaciones.controller.js");
 
-const ProspectService = require("./src/modules/Prospects/prospects.service.js");
-const ProspectController = require("./src/modules/Prospects/prospects.controller.js");
-const ProspectRepository = require("./src/modules/Prospects/prospects.repository.js");
+//const ProspectService = require("./src/modules/Prospects/prospects.service.js");
+//const ProspectController = require("./src/modules/Prospects/prospects.controller.js");
+//const ProspectRepository = require("./src/modules/Prospects/prospects.repository.js");
 const FileHandler = require("./utils/fileHandler.js");
 
 //repositories
