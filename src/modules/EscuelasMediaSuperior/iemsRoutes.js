@@ -11,13 +11,13 @@ const router = express.Router();
 // router.get("/search", searchIEMS);
 router
   .route("/")
-  .get(protect, IEMS_controller.getAllIEMS)
-  .post(protect, IEMS_controller.createIEMS);
+  .get(IEMS_controller.getAllIEMS)
+  .post(IEMS_controller.createIEMS);
 router
   .route("/:id")
-  .get(protect, IEMS_controller.getIEMSById)
-  .patch(protect, IEMS_controller.updateIEMS)
-  .delete(protect, IEMS_controller.deactivateIEMS);
+  .get(IEMS_controller.getIEMSById)
+  .patch(IEMS_controller.updateIEMS)
+  .delete(IEMS_controller.deactivateIEMS);
 
 // BULK IEMS
 // router
