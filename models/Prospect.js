@@ -81,6 +81,17 @@ const prospectSchema = new mongoose.Schema(
 
     technicalMajor: String,
 
+    // ======================
+    // DISCAPACIDAD, LENGUA INDÍGENA Y ETNIA
+    // ======================
+    hasDisability: { type: Boolean, default: false },
+    disabilityType: String,
+    disabilityDetails: String,
+    speaksIndigenousLanguage: { type: Boolean, default: false },
+    indigenousLanguage: String,
+    belongsToEthnicGroup: { type: Boolean, default: false },
+    ethnicGroup: String,
+
     averageGrade: {
       type: Number,
       min: 0,
