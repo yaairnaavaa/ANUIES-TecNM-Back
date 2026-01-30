@@ -18,6 +18,14 @@ const iesSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    mision: {
+      type: String,
+      trim: true,
+    },
+    vision: {
+      type: String,
+      trim: true,
+    },
     address: {
       street: String,
       number: String,
@@ -66,7 +74,13 @@ const iesSchema = new mongoose.Schema(
       logoPublicId: String, // ID de Cloudinary si se usa
       banner: String, // URL del banner
       bannerPublicId: String, // ID de Cloudinary si se usa
-      gallery: [String], // URLs de imágenes del campus
+      gallery: [
+        {
+          url: String,
+          publicId: String,
+          description: String,
+        }
+      ], // URLs de imágenes del campus
     },
     branding: {
       primaryColor: {
@@ -84,6 +98,13 @@ const iesSchema = new mongoose.Schema(
       },
       htmlPage: {
         type: String,
+      }
+    },
+    ofertaEducativa: {
+      descripcion: String,
+      totalCarreras: {
+        type: Number,
+        default: 0,
       }
     },
     configuration: {

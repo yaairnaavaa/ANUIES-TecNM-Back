@@ -82,6 +82,25 @@ class IES_Controller {
     });
   });
 
+  // @desc    Eliminar una carrera de una IES
+  // @route   DELETE /api/ies/:id/carreras/:carreraId
+  // @access  Private
+  eliminarCarreraDeIES = asyncHandler(async (req, res) => {
+    const { id, carreraId } = req.params;
+    const { user } = req;
+
+    const careers = await this.IES_service.eliminarCarreraDeIES(
+      user,
+      id,
+      carreraId,
+    );
+
+    res.status(200).json({
+      success: true,
+      data: careers,
+    });
+  });
+
   // // @desc    Obtener una IES por ID
   // // @route   GET /api/ies/:id
   // // @access  Private
@@ -138,6 +157,105 @@ class IES_Controller {
     res.status(200).json({
       success: true,
       message: "IES desactivada correctamente",
+    });
+  });
+
+  // // @desc    Actualizar filosofía institucional (misión y visión)
+  // // @route   PATCH /api/ies/:id/filosofia
+  // // @access  Private (Admin IES, Operativo IES)
+  updateFilosofia = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { mision, vision } = req.body;
+    const { user } = req;
+
+    const updatedIes = await this.IES_service.updateFilosofia(user, id, { mision, vision });
+
+    res.status(200).json({
+      success: true,
+      data: updatedIes,
+    });
+  });
+
+  // // @desc    Actualizar identidad visual (logo, colores, banner)
+  // // @route   PATCH /api/ies/:id/identidad-visual
+  // // @access  Private (Admin IES, Operativo IES)
+  updateIdentidadVisual = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const { user } = req;
+
+    const updatedIes = await this.IES_service.updateIdentidadVisual(user, id, data);
+
+    res.status(200).json({
+      success: true,
+      data: updatedIes,
+    });
+  });
+
+  // // @desc    Actualizar canales digitales (redes sociales, sitio web)
+  // // @route   PATCH /api/ies/:id/canales-digitales
+  // // @access  Private (Admin IES, Operativo IES)
+  updateCanalesDigitales = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const { user } = req;
+
+    const updatedIes = await this.IES_service.updateCanalesDigitales(user, id, data);
+
+    res.status(200).json({
+      success: true,
+      data: updatedIes,
+    });
+  });
+
+  // // @desc    Subir logo institucional
+  // // @route   POST /api/ies/:id/upload-logo
+  // // @access  Private (Admin IES, Operativo IES)
+  uploadLogo = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+    
+    // TODO: Implementar upload con Cloudinary
+    // const file = req.file;
+    // const uploadedImage = await cloudinaryService.uploadImage(file);
+
+    // Por ahora, placeholder para la configuración pendiente
+    res.status(501).json({
+      success: false,
+      message: "Configuración de Cloudinary pendiente. Agrega las credenciales y carpeta en la próxima iteración.",
+      // Estructura esperada cuando esté configurado:
+      // data: {
+      //   url: uploadedImage.secure_url,
+      //   publicId: uploadedImage.public_id
+      // }
+    });
+  });
+
+  // // @desc    Subir banner institucional
+  // // @route   POST /api/ies/:id/upload-banner
+  // // @access  Private (Admin IES, Operativo IES)
+  uploadBanner = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+    
+    // TODO: Implementar upload con Cloudinary
+    res.status(501).json({
+      success: false,
+      message: "Configuración de Cloudinary pendiente.",
+    });
+  });
+
+  // // @desc    Agregar imagen a galería institucional
+  // // @route   POST /api/ies/:id/upload-gallery
+  // // @access  Private (Admin IES, Operativo IES)
+  uploadGalleryImage = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+    
+    // TODO: Implementar upload con Cloudinary
+    res.status(501).json({
+      success: false,
+      message: "Configuración de Cloudinary pendiente.",
     });
   });
 }

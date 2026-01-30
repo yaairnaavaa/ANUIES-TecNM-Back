@@ -34,6 +34,10 @@ class CarrerasRepository {
       { new: true },
     );
   }
+
+  async deleteCarrera(id, session) {
+    return await Carrera.findByIdAndDelete(id, { session });
+  }
 }
 
 module.exports = CarrerasRepository;
