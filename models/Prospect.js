@@ -138,6 +138,15 @@ const prospectSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Campaign",
     },
+    originCampaignName: {
+      type: String,
+      required: true,
+    },
+    cycleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Ciclo",
+    },
+    cycleName: String,
     // ======================
     // ESTADO
     // ======================
