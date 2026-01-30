@@ -44,6 +44,10 @@ class IEMS_Service {
 
     throw new Error("Error al desactivar. Intenta mas tarde");
   }
+
+  async bulkInsertExcelIEMS(iems) {
+    return await this.IEMS_repository.bulkInsertExcelIEMS(iems);
+  }
 }
 
 module.exports = IEMS_Service;

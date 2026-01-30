@@ -25,6 +25,11 @@ const CarrerasController = require("./src/modules/Carreras/carreras.controller.j
 const NotificacionesService = require("./src/modules/Notificaciones/notificaciones.service.js");
 const NotificacionesController = require("./src/modules/Notificaciones/notificaciones.controller.js");
 
+const ProspectService = require("./src/modules/Prospects/prospects.service.js");
+const ProspectController = require("./src/modules/Prospects/prospects.controller.js");
+const ProspectRepository = require("./src/modules/Prospects/prospects.repository.js");
+const FileHandler = require("./utils/fileHandler.js");
+
 //repositories
 const IEMS_repository = new IEMS_Repository();
 const IES_repository = new IES_Repository();
@@ -33,13 +38,17 @@ const cicloRepository = new CicloRepository();
 const userRepository = new UserRepository();
 const carrerasRepository = new CarrerasRepository();
 
+const fileHandler = new FileHandler("./tempFiles");
+// const prospectRepository = new ProspectRepository();
+
 //IEMS BOOTSTRAP
 const IEMS_service = new IEMS_Service(IEMS_repository);
-exports.IEMS_controller = new IEMS_Controller(IEMS_service);
+exports.IEMS_controller = new IEMS_Controller(IEMS_service, fileHandler);
 
 //IES BOOTRSTRAP
 const IES_service = new IES_Service(IES_repository, carrerasRepository);
 exports.IES_controller = new IES_Controller(IES_service);
+exports.IEMS_upload = fileHandler.upload;
 
 //CAMPAINGS BOOTRAP
 const campaignService = new CampaignService(
@@ -67,4 +76,10 @@ exports.carrerasController = new CarrerasController(carrerasServices);
 
 //NOTIFICATION BOOTRSRAP
 const notificationService = new NotificacionesService();
-exports.notificacionesController = new NotificacionesController(notificationService);
+exports.notificacionesController = new NotificacionesController(
+  notificationService,
+);
+
+//PROSPECTS BOOTRSAP
+// const prospectService = new ProspectService(prospectRepository);
+// exports.prospectController = new ProspectController(prospectService);

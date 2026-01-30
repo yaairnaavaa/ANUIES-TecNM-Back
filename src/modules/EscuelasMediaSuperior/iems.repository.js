@@ -51,6 +51,35 @@ class IEMS_Repository {
       active: false,
     });
   }
+
+  async bulkInsertExcelIEMS(data) {
+    
+    let IEMSInsertados = [];
+    let IEMSDuplicados = [];
+    try {
+      IEMSInsertados = await IEMS.insertMany(data, {
+        ordered: false,
+      });
+    } catch (error) {
+      IEMSInsertados = error.insertedDocs || [];
+
+      if (error.writeErrors) {
+        for (const e of error.writeErrors) {
+          if (e.err.code === 11000) {
+            IEMSDuplicados.push({
+              name: e.err.op.name,
+              code: e.err.op.cct,
+            });
+          }
+        }
+      }
+    } finally {
+      return {
+        IEMSInsertados,
+        IEMSDuplicados,
+      };
+    }
+  }
 }
 
 module.exports = IEMS_Repository;

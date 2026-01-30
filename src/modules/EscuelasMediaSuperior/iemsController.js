@@ -1,10 +1,11 @@
 const asyncHandler = require("../../middleware/asyncHandler.js");
 // const IEMS = require("./IEMS.model.js");
-// const { fileHandler } = require("../../../bootstrap.js");
+// const { fileHandler } = require("./../../../bootstrap.js");
 
 class IEMS_Controller {
-  constructor(IEMS_service) {
+  constructor(IEMS_service, fileHandler) {
     this.IEMS_service = IEMS_service;
+    this.fileHandler = fileHandler;
   }
 
   // // @desc    Obtener todas las IEMS
@@ -66,7 +67,7 @@ class IEMS_Controller {
   // // @access  Private (Admin Nacional)
   deactivateIEMS = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    
+
     await this.IEMS_service.deactivateIEMS(id);
 
     res.status(200).json({
@@ -74,121 +75,59 @@ class IEMS_Controller {
       message: "IEMS desactivada correctamente",
     });
   });
+
+  bulkInsertExcelIEMS = asyncHandler(async (req, res) => {
+    //1) Recibir csv
+    const file = req.file;
+
+    // console.log("fileHandler:", fileHandler);
+    // console.log("CSVtoJson:", fileHandler.CSVtoJson);
+
+    if (!file) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid csv file",
+      });
+    }
+
+    const data = await this.fileHandler.CSVtoJson(file.path);
+
+    const restructuredData = data.map((row) => {
+      const values = Object.values(row);
+
+      return {
+        address: {
+          state: values[0], // ENTIDAD
+          municipality: values[1], // MUNICIPIO
+          locality: values[2], // LOCALIDAD
+        },
+        name: values[3], // NOMBRE_DEL_PLANTEL
+        type: values[4] ?? "Otro", // SUBSISTEMA
+        code: values[5], // CCT
+      };
+    });
+
+    let IEMSInsertados = [];
+    let IEMSDuplicados = [];
+
+    const result =
+      await this.IEMS_service.bulkInsertExcelIEMS(restructuredData);
+
+    IEMSInsertados = result.IEMSInsertados;
+    IEMSDuplicados = result.IEMSDuplicados;
+
+    res.status(201).json({
+      status: "sucess",
+      data: {
+        IEMSInsertados,
+        IEMSDuplicados,
+      },
+    });
+  });
 }
 
 module.exports = IEMS_Controller;
 
-// // @desc    Eliminar (desactivar) IEMS
-// // @route   DELETE /api/iems/:id
-// // @access  Private (Admin Nacional)
-// exports.deleteIEMS = asyncHandler(async (req, res) => {
-//   const iems = await IEMS.findById(req.params.id);
-
-//   if (!iems) {
-//     return res.status(404).json({
-//       success: false,
-//       message: "IEMS no encontrada",
-//     });
-//   }
-
-//   // Desactivar en lugar de eliminar
-//   iems.active = false;
-//   await iems.save();
-
-//   res.status(200).json({
-//     success: true,
-//     message: "IEMS desactivada correctamente",
-//     data: {},
-//   });
-// });
-
-// // @desc    Buscar IEMS por estado y municipio
-// // @route   GET /api/iems/search
-// // @access  Public
-// exports.searchIEMS = asyncHandler(async (req, res) => {
-//   const { state, municipality, type } = req.query;
-
-//   let query = IEMS.find({ active: true });
-
-//   if (state) {
-//     query = query.where("address.state").equals(state);
-//   }
-
-//   if (municipality) {
-//     query = query
-//       .where("address.municipality")
-//       .regex(new RegExp(municipality, "i"));
-//   }
-
-//   if (type) {
-//     query = query.where("type").equals(type);
-//   }
-
-//   const iems = await query.select(
-//     "name type address.municipality address.state contact.email"
-//   );
-
-//   res.status(200).json({
-//     success: true,
-//     count: iems.length,
-//     data: iems,
-//   });
-// });
-
 // // @desc Bulk instert IEMS desde excel
 // // @route POST /api/
 // // @access Private (Admin Nacional)
-// exports.bulkInsertExcelIEMS = asyncHandler(async (req, res) => {
-//   //1) Recibir excel
-//   const file = req.file;
-
-//   if (!file) {
-//     return res.status(400).json({
-//       status: "fail",
-//       message: "Invalid csv file",
-//     });
-//   }
-
-//   const data = await fileHandler.CSVtoJson(file.path);
-
-//   const restructuredData = data.map((d) => ({
-//     code: d.CCT,
-//     name: d.NOMBRE_DEL_PLANTEL,
-//     type: d.SUBSISTEMA ?? "Otro",
-//     address: {
-//       state: d.ENTIDAD,
-//       municipality: d.MUNICIPIO,
-//       locality: d.LOCALIDAD,
-//     },
-//     cct: d.CCT,
-//   }));
-
-//   let IEMSInsertados = [];
-//   let IEMSDuplicados = [];
-
-//   try {
-//     IEMSInsertados = await IEMS.insertMany(restructuredData, {
-//       ordered: false,
-//     });
-//   } catch (error) {
-//     IEMSInsertados = error.insertedDocs || [];
-
-//     if (error.writeErrors) {
-//       for (const e of error.writeErrors) {
-//         if (e.err.code === 11000) {
-//           IEMSDuplicados.push({
-//             name: e.err.op.name,
-//             code: e.err.op.cct,
-//           });
-//         }
-//       }
-//     }
-//   }
-//   res.status(201).json({
-//     status: "sucess",
-//     data: {
-//       IEMSInsertados,
-//       IEMSDuplicados,
-//     },
-//   });
-// });
