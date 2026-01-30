@@ -79,6 +79,50 @@ class IES_Service {
     }
   }
 
+  async eliminarCarreraDeIES(user, iesId, carreraId) {
+    if (!haveAccessToIES(user, iesId))
+      throw new Error(`No tienes acceso a esta ies`);
+
+    const ies = await this.IES_repository.getIESById(iesId);
+
+    if (!ies) throw new Error(`IES con el id ${iesId} no existe`);
+
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    try {
+      // Eliminar de la colección Carreras
+      const deletedCarrera = await this.carrerasRepository.deleteCarrera(
+        carreraId,
+        session,
+      );
+
+      if (!deletedCarrera)
+        throw new Error(`Carrera con id ${carreraId} no existe`);
+
+      // Remover referencia del array careers en IES
+      const updatedIES = await this.IES_repository.removeCarreraIES(
+        iesId,
+        carreraId,
+        session,
+      );
+
+      if (!updatedIES)
+        throw new Error("Error al remover carrera de la IES");
+
+      await session.commitTransaction();
+
+      return updatedIES.careers;
+    } catch (error) {
+      await session.abortTransaction();
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async getCarreraById(iesId, carreraId) {
     const carrera = await this.IES_repository.getCarreraById(iesId, carreraId);
 
@@ -169,6 +213,73 @@ class IES_Service {
 
   async deactivateIES(id) {
     return await this.IES_repository.deactivateIES(id);
+  }
+
+  async updateFilosofia(user, id, data) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
+
+    const ies = await this.IES_repository.getIESById(id);
+    if (!ies) throw new Error(`IES con id: ${id} no existe`);
+
+    const updateData = {};
+    if (data.mision !== undefined) updateData.mision = data.mision;
+    if (data.vision !== undefined) updateData.vision = data.vision;
+
+    const updatedIES = await this.IES_repository.updateIES(id, updateData);
+
+    if (!updatedIES)
+      throw new Error("No se pudo actualizar la filosofía institucional");
+
+    return updatedIES;
+  }
+
+  async updateIdentidadVisual(user, id, data) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
+
+    const ies = await this.IES_repository.getIESById(id);
+    if (!ies) throw new Error(`IES con id: ${id} no existe`);
+
+    const updateData = {};
+    
+    // Branding (colores, fuente)
+    if (data.branding) {
+      updateData.branding = data.branding;
+    }
+
+    // Imágenes institucionales
+    if (data.institutionalImage) {
+      updateData.institutionalImage = data.institutionalImage;
+    }
+
+    const updatedIES = await this.IES_repository.updateIES(id, updateData);
+
+    if (!updatedIES)
+      throw new Error("No se pudo actualizar la identidad visual");
+
+    return updatedIES;
+  }
+
+  async updateCanalesDigitales(user, id, data) {
+    if (!haveAccessToIES(user, id))
+      throw new Error(`No tienes acceso a esta ies`);
+
+    const ies = await this.IES_repository.getIESById(id);
+    if (!ies) throw new Error(`IES con id: ${id} no existe`);
+
+    const updateData = {};
+    
+    if (data.contact) {
+      updateData.contact = { ...ies.contact, ...data.contact };
+    }
+
+    const updatedIES = await this.IES_repository.updateIES(id, updateData);
+
+    if (!updatedIES)
+      throw new Error("No se pudo actualizar los canales digitales");
+
+    return updatedIES;
   }
 }
 

@@ -27,10 +27,13 @@ exports.parseEditableFieldsForAdminIes = (user, data) => {
 
   if (user.role?.name === "Admin Nacional") return { ...data };
 
+  // Admin IES y Operativo IES pueden editar estos campos
   const alowedData = { ...data };
 
+  // Campos NO editables por Admin IES / Operativo IES
   delete alowedData.code;
   delete alowedData.active;
+  delete alowedData.careers; // Las carreras se gestionan por endpoint específico
 
   return alowedData;
 };

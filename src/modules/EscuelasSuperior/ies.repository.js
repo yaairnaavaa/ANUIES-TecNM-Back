@@ -70,6 +70,20 @@ class IES_Repository {
     );
   }
 
+  async removeCarreraIES(iesId, carreraId, session) {
+    return await IES.findByIdAndUpdate(
+      iesId,
+      {
+        $pull: {
+          careers: {
+            carreraId: carreraId,
+          },
+        },
+      },
+      { session, new: true },
+    );
+  }
+
   async getCarreraByName(iesId, carreraNombre) {
     return await IES.findOne({
       _id: iesId,

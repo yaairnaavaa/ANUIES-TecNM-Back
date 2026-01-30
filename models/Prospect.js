@@ -155,7 +155,6 @@ const prospectSchema = new mongoose.Schema(
 );
 
 prospectSchema.index({ email: 1 }, { unique: true });
-prospectSchema.index({ curp: 1 }, { unique: true });
 prospectSchema.index({
   fatherLastName: 1,
   motherLastName: 1,
