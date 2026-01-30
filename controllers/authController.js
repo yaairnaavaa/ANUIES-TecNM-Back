@@ -174,10 +174,11 @@ exports.login = asyncHandler(async (req, res) => {
   const token = generateToken(user._id);
 
   // Configurar cookie con el token (httpOnly para seguridad)
+  // sameSite: 'none' + secure necesarios en producción cuando front y API están en distintos dominios (ej. Vercel)
   res.cookie("anuies_token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   });
 
