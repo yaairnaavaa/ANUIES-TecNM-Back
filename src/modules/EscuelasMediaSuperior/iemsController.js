@@ -3,9 +3,12 @@ const asyncHandler = require("../../middleware/asyncHandler.js");
 // const { fileHandler } = require("./../../../bootstrap.js");
 
 class IEMS_Controller {
-  constructor(IEMS_service, fileHandler) {
+  constructor(
+    IEMS_service,
+    // fileHandler
+  ) {
     this.IEMS_service = IEMS_service;
-    this.fileHandler = fileHandler;
+    // this.fileHandler = fileHandler;
   }
 
   // // @desc    Obtener todas las IEMS
@@ -76,58 +79,54 @@ class IEMS_Controller {
     });
   });
 
-  bulkInsertExcelIEMS = asyncHandler(async (req, res) => {
-    //1) Recibir csv
-    const file = req.file;
+  // bulkInsertExcelIEMS = asyncHandler(async (req, res) => {
+  //   //1) Recibir csv
+  //   const file = req.file;
 
-    // console.log("fileHandler:", fileHandler);
-    // console.log("CSVtoJson:", fileHandler.CSVtoJson);
+  //   // console.log("fileHandler:", fileHandler);
+  //   // console.log("CSVtoJson:", fileHandler.CSVtoJson);
 
-    if (!file) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Invalid csv file",
-      });
-    }
+  //   if (!file) {
+  //     return res.status(400).json({
+  //       status: "fail",
+  //       message: "Invalid csv file",
+  //     });
+  //   }
 
-    const data = await this.fileHandler.CSVtoJson(file.path);
+  //   const data = await this.fileHandler.CSVtoJson(file.path);
 
-    const restructuredData = data.map((row) => {
-      const values = Object.values(row);
+  //   const restructuredData = data.map((row) => {
+  //     const values = Object.values(row);
 
-      return {
-        address: {
-          state: values[0], // ENTIDAD
-          municipality: values[1], // MUNICIPIO
-          locality: values[2], // LOCALIDAD
-        },
-        name: values[3], // NOMBRE_DEL_PLANTEL
-        type: values[4] ?? "Otro", // SUBSISTEMA
-        code: values[5], // CCT
-      };
-    });
+  //     return {
+  //       address: {
+  //         state: values[0], // ENTIDAD
+  //         municipality: values[1], // MUNICIPIO
+  //         locality: values[2], // LOCALIDAD
+  //       },
+  //       name: values[3], // NOMBRE_DEL_PLANTEL
+  //       type: values[4] ?? "Otro", // SUBSISTEMA
+  //       code: values[5], // CCT
+  //     };
+  //   });
 
-    let IEMSInsertados = [];
-    let IEMSDuplicados = [];
+  //   let IEMSInsertados = [];
+  //   let IEMSDuplicados = [];
 
-    const result =
-      await this.IEMS_service.bulkInsertExcelIEMS(restructuredData);
+  //   const result =
+  //     await this.IEMS_service.bulkInsertExcelIEMS(restructuredData);
 
-    IEMSInsertados = result.IEMSInsertados;
-    IEMSDuplicados = result.IEMSDuplicados;
+  //   IEMSInsertados = result.IEMSInsertados;
+  //   IEMSDuplicados = result.IEMSDuplicados;
 
-    res.status(201).json({
-      status: "sucess",
-      data: {
-        IEMSInsertados,
-        IEMSDuplicados,
-      },
-    });
-  });
+  //   res.status(201).json({
+  //     status: "sucess",
+  //     data: {
+  //       IEMSInsertados,
+  //       IEMSDuplicados,
+  //     },
+  //   });
+  // });
 }
 
 module.exports = IEMS_Controller;
-
-// // @desc Bulk instert IEMS desde excel
-// // @route POST /api/
-// // @access Private (Admin Nacional)

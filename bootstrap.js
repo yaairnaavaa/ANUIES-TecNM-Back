@@ -38,17 +38,20 @@ const cicloRepository = new CicloRepository();
 const userRepository = new UserRepository();
 const carrerasRepository = new CarrerasRepository();
 
-const fileHandler = new FileHandler("./tempFiles");
+// const fileHandler = new FileHandler("./tempFiles");
 // const prospectRepository = new ProspectRepository();
 
 //IEMS BOOTSTRAP
 const IEMS_service = new IEMS_Service(IEMS_repository);
-exports.IEMS_controller = new IEMS_Controller(IEMS_service, fileHandler);
+exports.IEMS_controller = new IEMS_Controller(
+  IEMS_service,
+  // ,fileHandler
+);
 
 //IES BOOTRSTRAP
 const IES_service = new IES_Service(IES_repository, carrerasRepository);
 exports.IES_controller = new IES_Controller(IES_service);
-exports.IEMS_upload = fileHandler.upload;
+// exports.IEMS_upload = fileHandler.upload;
 
 //CAMPAINGS BOOTRAP
 const campaignService = new CampaignService(
