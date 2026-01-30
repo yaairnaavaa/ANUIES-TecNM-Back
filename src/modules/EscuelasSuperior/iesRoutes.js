@@ -36,14 +36,14 @@ router
 
 router.route("/:id/htmlPage").get(IES_controller.getHTMLpage).post(protect, IES_controller.addHTMLpage);
 
-// Rutas específicas para edición por secciones (requieren autenticación)
-router.route("/:id/filosofia").patch(protect, IES_controller.updateFilosofia);
-router.route("/:id/identidad-visual").patch(protect, IES_controller.updateIdentidadVisual);
-router.route("/:id/canales-digitales").patch(protect, IES_controller.updateCanalesDigitales);
+// Rutas específicas para edición por secciones (sin autenticación)
+router.route("/:id/filosofia").patch(IES_controller.updateFilosofia);
+router.route("/:id/identidad-visual").patch(IES_controller.updateIdentidadVisual);
+router.route("/:id/canales-digitales").patch(IES_controller.updateCanalesDigitales);
 
-// Rutas para uploads de imágenes (requieren autenticación, preparadas para Cloudinary)
-router.route("/:id/upload-logo").post(protect, IES_controller.uploadLogo);
-router.route("/:id/upload-banner").post(protect, IES_controller.uploadBanner);
-router.route("/:id/upload-gallery").post(protect, IES_controller.uploadGalleryImage);
+// Rutas para uploads de imágenes (sin autenticación, preparadas para Cloudinary)
+router.route("/:id/upload-logo").post(IES_controller.uploadLogo);
+router.route("/:id/upload-banner").post(IES_controller.uploadBanner);
+router.route("/:id/upload-gallery").post(IES_controller.uploadGalleryImage);
 
 module.exports = router;
