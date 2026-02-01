@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/register", registerProspect);
 router.patch("/:id/profile", updateProspectProfile);
 router.patch("/:id", updateProspectProfile);
-router.get("/", getAllProspects); // Temporalmente pública para Vercel
+router.get("/", protect, getAllProspects); // Temporalmente pública para Vercel
 router.get("/:id", getProspectById); // Temporalmente pública para Vercel
 
 // Rutas protegidas

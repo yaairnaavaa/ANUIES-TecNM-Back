@@ -3,7 +3,7 @@ const flatten = require("./../../../utils/flatten");
 
 class CampaignRepository {
   async getAllCampaigns(queryObject) {
-    let query = CAMP.find();
+    let query = CAMP.find(queryObject);
     return await query.sort({ name: 1 });
   }
 

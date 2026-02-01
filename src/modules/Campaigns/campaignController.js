@@ -10,8 +10,9 @@ class CampaignController {
   // // @access  Private
   getAllCampaigns = asyncHandler(async (req, res) => {
     const queryObject = req.query;
+    const user = req.user;
 
-    const campaigns = await this.campaignService.getAllCampaigns(queryObject);
+    const campaigns = await this.campaignService.getAllCampaigns(user, queryObject);
 
     res.status(200).json({
       status: "success",

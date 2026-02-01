@@ -4,6 +4,8 @@ const { validateCURP } = require("./../utils/curpValidator");
 const IES = require("./../src/modules/EscuelasSuperior/IES.model");
 const Camp = require("./../src/modules/Campaigns/campaign.model");
 
+const { scopeCampaignByUser } = require("./../src/policies/campaign.policies");
+
 // @desc    Registrar nuevo interesado (público)
 // @route   POST /api/prospects/register
 // @access  Public
@@ -138,27 +140,35 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 exports.getAllProspects = asyncHandler(async (req, res) => {
   let query = Prospect.find();
 
-  // Filtrar por IES si el usuario está autenticado y es Admin IES u Operativo
+  // // Filtrar por IES si el usuario está autenticado y es Admin IES u Operativo
   if (req.user && ["Admin IES", "Operativo IES"].includes(req.user.role.name)) {
-    query = query.where("firstChoiceIES").equals(req.user.ies);
+    const campaignFromIes = await Camp.findOne({
+      "ies.iesId": { $eq: req.user.ies._id },
+    });
+
+    if(!campaignFromIes) throw new Error('No hay campaña para esa ies')
+    
+    query = query.where("originCampaign").equals(campaignFromIes._id);
   }
 
-  // Filtros opcionales
-  if (req.query.classification) {
-    query = query.where("classification").equals(req.query.classification);
-  }
+  // // Filtros opcionales
+  // if (req.query.classification) {
+  //   query = query.where("classification").equals(req.query.classification);
+  // }
 
-  if (req.query.firstChoiceIES) {
-    query = query.where("firstChoiceIES").equals(req.query.firstChoiceIES);
-  }
+  // if (req.query.firstChoiceIES) {
+  //   query = query.where("firstChoiceIES").equals(req.query.firstChoiceIES);
+  // }
 
-  if (req.query.contactChannel) {
-    query = query.where("contactChannel").equals(req.query.contactChannel);
-  }
+  // if (req.query.contactChannel) {
+  //   query = query.where("contactChannel").equals(req.query.contactChannel);
+  // }
 
-  if (req.query.active !== undefined) {
-    query = query.where("active").equals(req.query.active === "true");
-  }
+  // if (req.query.active !== undefined) {
+  //   query = query.where("active").equals(req.query.active === "true");
+  // }
+
+  // console.log(query);
 
   const prospects = await query
     .populate("firstChoiceIES", "name code")

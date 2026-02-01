@@ -1,3 +1,5 @@
+const { scopeCampaignByUser } = require("./../../policies/campaign.policies");
+
 class CampaignService {
   constructor(
     campaignRepository,
@@ -11,7 +13,13 @@ class CampaignService {
     this.iemsRepository = iemsRepository;
   }
 
-  async getAllCampaigns(queryObject) {
+  async getAllCampaigns(user, queryObject) {
+    console.log(user);
+
+    queryObject = scopeCampaignByUser(user);
+
+    console.log(queryObject);
+
     return await this.campaignRepository.getAllCampaigns(queryObject);
   }
 
