@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
@@ -43,6 +44,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Assets estáticos (imágenes para correos, etc.)
+app.use("/assets", express.static(path.join(__dirname, "src", "assets")));
+
 // Routes
 // Ruta de prueba
 app.get("/", (req, res) => {
@@ -75,6 +79,7 @@ require("./models/Role");
 require("./models/User");
 require("./models/Period"); // si existe
 require("./models/Prospect"); // si existe
+require("./models/PasswordResetToken");
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

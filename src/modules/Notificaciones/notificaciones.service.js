@@ -10,16 +10,18 @@ class NotificacionesService {
             process.env.SECRET_KEY
         );
         
-        // Cargar la plantilla HTML
-        this.emailTemplate = this.loadEmailTemplate();
+        // Cargar las plantillas HTML
+        this.emailTemplate = this.loadEmailTemplate('email-campaign.html');
+        this.resetPasswordTemplate = this.loadEmailTemplate('email-resetPassword.html');
     }
-    
+
     /**
-     * Cargar la plantilla HTML desde el archivo
+     * Cargar una plantilla HTML desde el archivo
+     * @param {string} filename - Nombre del archivo en la carpeta templates
      */
-    loadEmailTemplate() {
+    loadEmailTemplate(filename) {
         try {
-            const templatePath = path.join(__dirname, 'templates', 'email-campaign.html');
+            const templatePath = path.join(__dirname, 'templates', filename);
             return fs.readFileSync(templatePath, 'utf8');
         } catch (error) {
             console.error('❌ Error al cargar la plantilla HTML:', error);
@@ -92,10 +94,64 @@ class NotificacionesService {
     }
 
     /**
-     * Renderizar la plantilla HTML reemplazando las variables
+     * Enviar correo con enlace para restablecer contraseña
+     * @param {string} email - Correo del usuario
+     * @param {string} resetLink - URL con token para restablecer
+     * @param {string} [userName] - Nombre del usuario (opcional)
+     */
+    async sendPasswordResetEmail(email, resetLink, userName = '') {
+        try {
+            const displayName = userName || email;
+            const htmlContent = this.renderResetPasswordTemplate({
+                displayName,
+                resetLink,
+                currentYear: new Date().getFullYear()
+            });
+
+            // Incluir el banner como imagen inline (CID) para que se vea en el correo sin depender de URL externa
+            const bannerPath = path.join(__dirname, '..', '..', 'assets', 'anuies-banner.png');
+            const bannerBase64 = fs.existsSync(bannerPath)
+                ? fs.readFileSync(bannerPath, { encoding: 'base64' })
+                : null;
+
+            const messagePayload = {
+                From: {
+                    Email: process.env.MAILJET_FROM_EMAIL || 'no-replyanuies@ittepic.edu.mx',
+                    Name: 'ANUIES - No responder'
+                },
+                To: [{ Email: email, Name: displayName }],
+                Subject: 'Restablecer tu contraseña - ANUIES',
+                HTMLPart: htmlContent
+            };
+            if (bannerBase64) {
+                messagePayload.InlinedAttachments = [
+                    {
+                        ContentType: 'image/png',
+                        Filename: 'anuies-banner.png',
+                        ContentID: 'banner',
+                        Base64Content: bannerBase64
+                    }
+                ];
+            }
+
+            const request = this.mailjet
+                .post('send', { version: 'v3.1' })
+                .request({
+                    Messages: [messagePayload]
+                });
+
+            await request;
+            return { success: true };
+        } catch (error) {
+            console.error('❌ Error al enviar correo de restablecimiento:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Renderizar la plantilla HTML de campaña reemplazando las variables
      */
     renderEmailTemplate({ fullName, campaignName, iesName, firstChoice, folio, registrationLink }) {
-        // Reemplazar las variables en la plantilla
         return this.emailTemplate
             .replace(/\{\{fullName\}\}/g, fullName)
             .replace(/\{\{campaignName\}\}/g, campaignName)
@@ -104,6 +160,17 @@ class NotificacionesService {
             .replace(/\{\{folio\}\}/g, folio)
             .replace(/\{\{registrationLink\}\}/g, registrationLink)
             .replace(/\{\{currentYear\}\}/g, new Date().getFullYear());
+    }
+
+    /**
+     * Renderizar la plantilla HTML de restablecimiento de contraseña
+     * @param {Object} data - { displayName, resetLink, currentYear }
+     */
+    renderResetPasswordTemplate({ displayName, resetLink, currentYear }) {
+        return this.resetPasswordTemplate
+            .replace(/\{\{displayName\}\}/g, displayName)
+            .replace(/\{\{resetLink\}\}/g, resetLink)
+            .replace(/\{\{currentYear\}\}/g, currentYear);
     }
 
 }
