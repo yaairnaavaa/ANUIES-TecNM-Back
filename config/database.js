@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/anuies-tecnm";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 let cached = global.mongoose;
 
@@ -10,14 +9,10 @@ if (!cached) {
 }
 
 async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
-  }
+  if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false,
-    });
+    cached.promise = mongoose.connect(MONGODB_URI); // 👈 SIN bufferCommands false
   }
 
   cached.conn = await cached.promise;
