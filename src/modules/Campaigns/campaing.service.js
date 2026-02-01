@@ -1,4 +1,5 @@
 const { scopeCampaignByUser } = require("./../../policies/campaign.policies");
+const Prospect = require("./../../../models/Prospect");
 
 class CampaignService {
   constructor(
@@ -20,7 +21,35 @@ class CampaignService {
 
     console.log(queryObject);
 
-    return await this.campaignRepository.getAllCampaigns(queryObject);
+    const campaigns = await this.campaignRepository.getAllCampaigns(queryObject);
+    if (campaigns.length === 0) return campaigns;
+
+    const campaignIds = campaigns.map((c) => c._id);
+    const stats = await Prospect.aggregate([
+      { $match: { originCampaign: { $in: campaignIds } } },
+      {
+        $group: {
+          _id: "$originCampaign",
+          totalRegistrados: { $sum: 1 },
+          totalCompletos: {
+            $sum: { $cond: ["$processStatus.registrationComplete", 1, 0] },
+          },
+        },
+      },
+    ]);
+    const statsMap = new Map(
+      stats.map((s) => [s._id.toString(), { totalRegistrados: s.totalRegistrados, totalCompletos: s.totalCompletos }])
+    );
+
+    return campaigns.map((c) => {
+      const cId = c._id.toString();
+      const s = statsMap.get(cId) || { totalRegistrados: 0, totalCompletos: 0 };
+      return {
+        ...c.toObject ? c.toObject() : c,
+        totalRegistrados: s.totalRegistrados,
+        totalCompletos: s.totalCompletos,
+      };
+    });
   }
 
   async getCampaignById(id) {
@@ -28,7 +57,22 @@ class CampaignService {
 
     if (!campaign) throw new Error(`Campaña con id ${id} no existe`);
 
-    return campaign;
+    const [stats] = await Prospect.aggregate([
+      { $match: { originCampaign: campaign._id } },
+      {
+        $group: {
+          _id: null,
+          totalRegistrados: { $sum: 1 },
+          totalCompletos: {
+            $sum: { $cond: ["$processStatus.registrationComplete", 1, 0] },
+          },
+        },
+      },
+    ]);
+    const result = campaign.toObject ? campaign.toObject() : campaign;
+    result.totalRegistrados = stats ? stats.totalRegistrados : 0;
+    result.totalCompletos = stats ? stats.totalCompletos : 0;
+    return result;
   }
 
   async createCampaign(data) {
