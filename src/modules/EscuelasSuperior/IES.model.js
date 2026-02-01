@@ -85,13 +85,16 @@ const iesSchema = new mongoose.Schema(
     branding: {
       primaryColor: {
         type: String,
-        default: "#003366",
+        default: "#13163C",
       },
       secondaryColor: {
         type: String,
         default: "#FFFFFF",
       },
-      accentColor: String,
+      accentColor: {
+        type: String,
+        default: "#059669",
+      },
       fontFamily: {
         type: String,
         default: "Arial, sans-serif",
