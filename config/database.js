@@ -1,36 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/anuies-tecnm');
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/anuies-tecnm";
 
-    console.log(`MongoDB conectado: ${conn.connection.db.databaseName}`);
-    
-    // Manejo de eventos de conexión
-    mongoose.connection.on('error', (err) => {
-      console.error('Error de MongoDB:', err);
-    });
+let cached = global.mongoose;
 
-    mongoose.connection.on('disconnected', () => {
-      console.log('MongoDB desconectado');
-    });
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-    // Cerrar conexión al terminar la aplicación
-    process.on('SIGINT', async () => {
-      await mongoose.connection.close();
-      console.log('Conexión a MongoDB cerrada');
-      process.exit(0);
-    });
-
-  } catch (error) {
-    console.error('Error al conectar con MongoDB:', error.message);
-    // En Vercel (serverless) no usar process.exit para no tumbar la función
-    if (!process.env.VERCEL) {
-      process.exit(1);
-    }
-    // En Vercel solo registrar; las peticiones devolverán error hasta que MONGODB_URI esté configurado
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
-};
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+    });
+  }
+
+  cached.conn = await cached.promise;
+  console.log("✅ MongoDB conectado");
+
+  return cached.conn;
+}
 
 module.exports = connectDB;
-

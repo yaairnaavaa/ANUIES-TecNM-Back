@@ -10,10 +10,11 @@ require("dotenv").config();
 const connectDB = require("./config/database");
 const errorHandler = require("./src/middleware/errorHandler");
 
-// Conectar a la base de datos (en Vercel no se hace process.exit si falla; ver config/database.js)
-connectDB();
-
 const app = express();
+
+connectDB().catch(err => {
+  console.error("❌ Error conectando Mongo:", err);
+});
 
 // Seguridad
 app.use(helmet());
