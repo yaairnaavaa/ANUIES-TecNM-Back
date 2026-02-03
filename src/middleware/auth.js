@@ -81,7 +81,7 @@ exports.authorize = (...roles) => {
   return (req, res, next) => {
     // Obtener el nombre del rol del usuario
     const userRoleName = req.user.role?.name || req.user.role;
-    
+
     if (!roles.includes(userRoleName)) {
       return res.status(403).json({
         success: false,
@@ -110,6 +110,52 @@ exports.checkIESOwnership = (req, res, next) => {
       success: false,
       message: "No tienes permiso para acceder a esta IES",
     });
+  }
+
+  next();
+};
+
+// Middleware opcional: Si hay token, lo procesa, si no, deja pasar
+exports.optionalProtect = async (req, res, next) => {
+  let token;
+
+  // Log para debug
+  // console.log("🔍 Headers (Optional):", req.headers);
+
+  if (req.cookies && req.cookies.anuies_token) {
+    token = req.cookies.anuies_token;
+  }
+  else if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id)
+      .select("-password")
+      .populate("role")
+      .populate("ies", "name code");
+
+    // Si el usuario no existe o está inactivo, lo tratamos como público/guest
+    if (!req.user || !req.user.active) {
+      req.user = null;
+    } else {
+      // Update access time for logged in users
+      req.user.lastAccess = new Date();
+      await req.user.save({ validateBeforeSave: false });
+    }
+  } catch (error) {
+    // Si falla el token (expirado, inválido), simplemente continuamos como guest
+    // console.log("⚠️ Token error in optionalProtect:", error.message);
+    req.user = null;
   }
 
   next();

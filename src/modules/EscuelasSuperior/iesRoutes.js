@@ -1,5 +1,5 @@
 const express = require("express");
-const { protect, authorize } = require("./../../middleware/auth.js");
+const { protect, authorize, optionalProtect } = require("./../../middleware/auth.js");
 
 const { IES_controller } = require("./../../../bootstrap.js");
 
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(IES_controller.getAllIES)
+  .get(optionalProtect, IES_controller.getAllIES)
   .post(protect, IES_controller.createIES);
 
 router

@@ -1,11 +1,13 @@
 exports.scopeIESbyUser = (user) => {
-  console.log("user from polici", user);
-  if (!user) return {}; // Sin usuario, mostrar todas las IES
+  if (!user) return {};
 
-  // // Si es Admin IES u Operativo, solo puede ver su IES
-  if (["Admin IES", "Operativo IES"].includes(user.role.name)) {
+  const roleName = user.role?.name || user.role;
+
+  // Si es Admin IES u Operativo, solo puede ver su IES
+  if (["Admin IES", "Operativo IES"].includes(roleName)) {
+    const iesId = user.ies?._id || user.ies;
     return {
-      _id: { $eq: user.ies },
+      _id: { $eq: iesId }, // Ensure we pass the ID, not the populated object
     };
   }
 
