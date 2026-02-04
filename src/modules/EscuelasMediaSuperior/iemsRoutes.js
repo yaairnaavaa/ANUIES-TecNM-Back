@@ -20,13 +20,12 @@ router
   .delete(IEMS_controller.deactivateIEMS);
 
 // BULK IEMS
-// router
-//   .route("/bulkInsert/csv")
-//   .post(
-//     IEMS_upload.single("file"),
-//     protect,
-//     authorize("Admin Nacional"),
-//     IEMS_controller.bulkInsertExcelIEMS,
-//   );
+router
+  .route("/bulkInsert")
+  .post(
+    protect,
+    authorize("Admin Nacional"),
+    IEMS_controller.bulkInsertIEMS,
+  );
 
 module.exports = router;
