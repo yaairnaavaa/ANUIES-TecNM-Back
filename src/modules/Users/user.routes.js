@@ -5,16 +5,16 @@ const { userController } = require("../../../bootstrap.js");
 
 const router = express.Router();
 
-// Rutas para gestión de usuarios
+// Rutas protegidas - solo usuarios autenticados pueden gestionar usuarios
 router
   .route("/")
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .get(protect, userController.getAllUsers)
+  .post(protect, authorize('Admin Nacional', 'Admin IES'), userController.createUser);
 
 router
   .route("/:id")
-  .get(userController.getUserById)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .get(protect, userController.getUserById)
+  .patch(protect, userController.updateUser)
+  .delete(protect, authorize('Admin Nacional', 'Admin IES'), userController.deleteUser);
 
 module.exports = router;

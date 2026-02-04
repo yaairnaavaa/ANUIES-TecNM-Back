@@ -5,6 +5,7 @@ const { protect } = require("./../../middleware/auth");
 
 const router = Router();
 
-router.route("/emailCampaign").post(notificacionesController.sendEmailCampaign);
+// Ruta protegida - solo usuarios autenticados pueden enviar emails de campañas
+router.route("/emailCampaign").post(protect, authorize('Admin Nacional', 'Admin IES'), notificacionesController.sendEmailCampaign);
 
 module.exports = router;

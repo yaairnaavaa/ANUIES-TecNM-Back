@@ -10,11 +10,11 @@ const { protect, authorize } = require('./../src/middleware/auth');
 
 const router = express.Router();
 
-// Todas las rutas públicas por ahora (agregar protect después)
-router.get('/', getAllMenuPermissions);
-router.get('/:id', getMenuPermissionById);
-router.post('/', createMenuPermission);
-router.put('/:id', updateMenuPermission);
-router.delete('/:id', deleteMenuPermission);
+// Todas las rutas protegidas - solo usuarios autenticados pueden gestionar menú-permisos
+router.get('/', protect, getAllMenuPermissions);
+router.get('/:id', protect, getMenuPermissionById);
+router.post('/', protect, authorize('Admin Nacional'), createMenuPermission);
+router.put('/:id', protect, authorize('Admin Nacional'), updateMenuPermission);
+router.delete('/:id', protect, authorize('Admin Nacional'), deleteMenuPermission);
 
 module.exports = router;

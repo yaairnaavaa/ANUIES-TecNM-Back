@@ -4,16 +4,13 @@ const { carrerasController } = require("./../../../bootstrap");
 
 const router = Router();
 
-router
-  .route("/")
-  .get(carrerasController.getCarreras)
-  .post(carrerasController.createCarrera);
+// Rutas públicas de consulta
+router.get("/", carrerasController.getCarreras);
+router.get("/:id", carrerasController.getCarreraById);
 
-router
-  .route("/:id")
-  .get(carrerasController.getCarreraById)
-  .patch(carrerasController.updateCarrera);
-
-router.route("/:id/deactivate").patch(carrerasController.deactivateCarreraById);
+// Rutas protegidas - solo usuarios autenticados pueden gestionar carreras
+router.post("/", protect, authorize('Admin Nacional', 'Admin IES'), carrerasController.createCarrera);
+router.patch("/:id", protect, authorize('Admin Nacional', 'Admin IES'), carrerasController.updateCarrera);
+router.patch("/:id/deactivate", protect, authorize('Admin Nacional', 'Admin IES'), carrerasController.deactivateCarreraById);
 
 module.exports = router;

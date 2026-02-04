@@ -10,11 +10,11 @@ const { protect, authorize } = require('./../src/middleware/auth');
 
 const router = express.Router();
 
-// Todas las rutas públicas
-router.get('/', getAllPermissions);
-router.get('/:id', getPermissionById);
-router.post('/', createPermission);
-router.put('/:id', updatePermission);
-router.delete('/:id', deletePermission);
+// Todas las rutas protegidas - solo usuarios autenticados pueden gestionar permisos
+router.get('/', protect, getAllPermissions);
+router.get('/:id', protect, getPermissionById);
+router.post('/', protect, authorize('Admin Nacional'), createPermission);
+router.put('/:id', protect, authorize('Admin Nacional'), updatePermission);
+router.delete('/:id', protect, authorize('Admin Nacional'), deletePermission);
 
 module.exports = router;

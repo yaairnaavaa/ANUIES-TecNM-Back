@@ -13,14 +13,16 @@ const { protect, authorize } = require("./../src/middleware/auth");
 
 const router = express.Router();
 
-// Todas las rutas públicas
+// Rutas públicas de consulta
 router.get("/current", getCurrentPeriod);
 router.get("/", getAllPeriods);
 router.get("/:id", getPeriodById);
-router.post("/", createPeriod);
-router.put("/:id", updatePeriod);
-router.delete("/:id", deletePeriod);
-router.put("/:id/activate", activatePeriod);
-router.put("/:id/statistics", updatePeriodStatistics);
+
+// Rutas protegidas - solo usuarios autenticados pueden gestionar períodos
+router.post("/", protect, authorize('Admin Nacional'), createPeriod);
+router.put("/:id", protect, authorize('Admin Nacional'), updatePeriod);
+router.delete("/:id", protect, authorize('Admin Nacional'), deletePeriod);
+router.put("/:id/activate", protect, authorize('Admin Nacional'), activatePeriod);
+router.put("/:id/statistics", protect, authorize('Admin Nacional'), updatePeriodStatistics);
 
 module.exports = router;

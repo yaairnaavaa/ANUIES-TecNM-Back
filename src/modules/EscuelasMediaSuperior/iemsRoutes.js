@@ -7,17 +7,14 @@ const { IEMS_controller } = require("../../../bootstrap.js");
 
 const router = express.Router();
 
-// Todas las rutas públicas
-// router.get("/search", searchIEMS);
-router
-  .route("/")
-  .get(IEMS_controller.getAllIEMS)
-  .post(IEMS_controller.createIEMS);
-router
-  .route("/:id")
-  .get(IEMS_controller.getIEMSById)
-  .patch(IEMS_controller.updateIEMS)
-  .delete(IEMS_controller.deactivateIEMS);
+// Rutas públicas de consulta
+router.get("/", IEMS_controller.getAllIEMS);
+router.get("/:id", IEMS_controller.getIEMSById);
+
+// Rutas protegidas - solo usuarios autenticados pueden gestionar IEMS
+router.post("/", protect, authorize('Admin Nacional'), IEMS_controller.createIEMS);
+router.patch("/:id", protect, authorize('Admin Nacional', 'Admin IEMS'), IEMS_controller.updateIEMS);
+router.delete("/:id", protect, authorize('Admin Nacional'), IEMS_controller.deactivateIEMS);
 
 // BULK IEMS
 // router

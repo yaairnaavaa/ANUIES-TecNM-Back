@@ -5,16 +5,13 @@ const { cicloController } = require("./../../../bootstrap.js");
 
 const router = Router();
 
-router
-  .route("/")
-  .get(cicloController.getCiclos)
-  .post(cicloController.createCiclo);
-
+// Rutas públicas de consulta
+router.get("/", cicloController.getCiclos);
 router.get("/currentActive", cicloController.getCurrentCicleActive);
+router.get("/:id", cicloController.getCicloById);
 
-router
-  .route("/:id")
-  .get(cicloController.getCicloById)
-  .patch(cicloController.updateCiclo);
+// Rutas protegidas - solo usuarios autenticados pueden crear/actualizar ciclos
+router.post("/", protect, authorize('Admin Nacional'), cicloController.createCiclo);
+router.patch("/:id", protect, authorize('Admin Nacional'), cicloController.updateCiclo);
 
 module.exports = router;
