@@ -9,10 +9,11 @@ class NotificacionesService {
             process.env.API_KEY,
             process.env.SECRET_KEY
         );
-        
+
         // Cargar las plantillas HTML
         this.emailTemplate = this.loadEmailTemplate('email-campaign.html');
         this.resetPasswordTemplate = this.loadEmailTemplate('email-resetPassword.html');
+        this.newUserTemplate = this.loadEmailTemplate('email-newUser.html');
     }
 
     /**
@@ -39,7 +40,7 @@ class NotificacionesService {
         try {
             // Construir la URL de registro con el ID del prospecto
             const registrationLink = `${process.env.ANUIES_FRONT_URL}/registerStudent/${prospectId}`;
-            
+
             // Generar contenido HTML con los datos del prospecto
             const htmlContent = this.renderEmailTemplate({
                 fullName,
@@ -73,9 +74,9 @@ class NotificacionesService {
                 });
 
             const result = await request;
-            
+
             console.log('✅ Correo enviado exitosamente:', result.body);
-            
+
             return {
                 success: true,
                 message: 'Correo enviado exitosamente',
@@ -84,10 +85,10 @@ class NotificacionesService {
 
         } catch (error) {
             console.error('❌ Error al enviar correo con MailJet:', error);
-            
+
             throw new Error(
-                error.statusCode 
-                    ? `Error de MailJet: ${error.message}` 
+                error.statusCode
+                    ? `Error de MailJet: ${error.message}`
                     : 'Error al enviar el correo electrónico'
             );
         }
@@ -173,6 +174,78 @@ class NotificacionesService {
             .replace(/\{\{currentYear\}\}/g, currentYear);
     }
 
+    /**
+     * Enviar correo con credenciales para nuevo usuario
+     * @param {string} email - Correo del usuario
+     * @param {string} password - Contraseña
+     * @param {string} loginLink - URL para iniciar sesión
+     * @param {string} [userName] - Nombre del usuario
+     */
+    async sendNewUserEmail(email, password, loginLink, userName = '') {
+        try {
+            const displayName = userName || email;
+            const htmlContent = this.renderNewUserTemplate({
+                displayName,
+                email,
+                password,
+                loginLink,
+                currentYear: new Date().getFullYear()
+            });
+
+            // Incluir el banner como imagen inline (CID)
+            const bannerPath = path.join(__dirname, '..', '..', 'assets', 'anuies-banner.png');
+            const bannerBase64 = fs.existsSync(bannerPath)
+                ? fs.readFileSync(bannerPath, { encoding: 'base64' })
+                : null;
+
+            const messagePayload = {
+                From: {
+                    Email: process.env.MAILJET_FROM_EMAIL || 'no-replyanuies@ittepic.edu.mx',
+                    Name: 'ANUIES - Accesos Provisionales'
+                },
+                To: [{ Email: email, Name: displayName }],
+                Subject: 'Bienvenido a ANUIES - Tus Credenciales de Acceso',
+                HTMLPart: htmlContent
+            };
+
+            if (bannerBase64) {
+                messagePayload.InlinedAttachments = [
+                    {
+                        ContentType: 'image/png',
+                        Filename: 'anuies-banner.png',
+                        ContentID: 'banner',
+                        Base64Content: bannerBase64
+                    }
+                ];
+            }
+
+            const request = this.mailjet
+                .post('send', { version: 'v3.1' })
+                .request({
+                    Messages: [messagePayload]
+                });
+
+            await request;
+            return { success: true };
+        } catch (error) {
+            console.error('❌ Error al enviar correo de nuevo usuario:', error);
+            // No lanzamos error para no interrumpir el flujo de creación de usuario,
+            // pero logueamos el error.
+            return { success: false, error };
+        }
+    }
+
+    /**
+     * Renderizar la plantilla HTML de nuevo usuario
+     */
+    renderNewUserTemplate({ displayName, email, password, loginLink, currentYear }) {
+        return this.newUserTemplate
+            .replace(/\{\{displayName\}\}/g, displayName)
+            .replace(/\{\{email\}\}/g, email)
+            .replace(/\{\{password\}\}/g, password)
+            .replace(/\{\{loginLink\}\}/g, loginLink)
+            .replace(/\{\{currentYear\}\}/g, currentYear);
+    }
 }
 
 module.exports = NotificacionesService;
