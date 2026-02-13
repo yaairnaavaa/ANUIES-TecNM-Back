@@ -13,7 +13,7 @@ router
 
 router
   .route("/:id")
-  .get(protect, campaignController.getCampaignById)
+  .get(campaignController.getCampaignById)
   .delete(protect, campaignController.deactivateCampaign)
   .patch(protect, campaignController.updateCampaign);
 
