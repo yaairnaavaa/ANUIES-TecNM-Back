@@ -9,8 +9,20 @@ class CampaignController {
   // // @route   GET /api/ies/:id
   // // @access  Private
   getAllCampaigns = asyncHandler(async (req, res) => {
+    console.log('🔍 getAllCampaigns - req.user:', req.user);
+    console.log('🔍 getAllCampaigns - req.headers:', req.headers.authorization);
+    console.log('🔍 getAllCampaigns - req.cookies:', req.cookies);
+    
     const queryObject = req.query;
     const user = req.user;
+
+    // Validar que el usuario esté autenticado
+    if (!user) {
+      return res.status(401).json({
+        status: "error",
+        message: "Usuario no autenticado. Por favor inicia sesión nuevamente.",
+      });
+    }
 
     const campaigns = await this.campaignService.getAllCampaigns(user, queryObject);
 

@@ -6,13 +6,15 @@ exports.protect = async (req, res, next) => {
   let token;
 
   // Log para debug en producción
-  console.log("🔍 Headers:", req.headers);
-  console.log("🍪 Cookies:", req.cookies);
+  console.log("🔍 [AUTH] Headers:", req.headers);
+  console.log("🍪 [AUTH] Cookies:", req.cookies);
+  console.log("🌐 [AUTH] Origin:", req.headers.origin);
+  console.log("📍 [AUTH] URL:", req.url);
 
   // Primero intentar obtener token de cookies (httpOnly)
   if (req.cookies && req.cookies.anuies_token) {
     token = req.cookies.anuies_token;
-    console.log("✅ Token obtenido de cookie");
+    console.log("✅ [AUTH] Token obtenido de cookie");
   }
   // Si no está en cookies, verificar headers (para compatibilidad temporal)
   else if (
@@ -20,12 +22,12 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-    console.log("✅ Token obtenido de header");
+    console.log("✅ [AUTH] Token obtenido de header");
   }
 
   // Verificar que el token existe
   if (!token) {
-    console.log("❌ No se encontró token");
+    console.log("❌ [AUTH] No se encontró token");
     return res.status(401).json({
       success: false,
       message: "No estás autorizado para acceder a esta ruta",
@@ -35,9 +37,7 @@ exports.protect = async (req, res, next) => {
   try {
     // Verificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    console.log("User typeof:", typeof User);
-    console.log("User keys:", Object.keys(User));
+    console.log("✅ [AUTH] Token decodificado, userId:", decoded.id);
 
     // Buscar el usuario por ID y poblar role e ies
     req.user = await User.findById(decoded.id)
@@ -46,14 +46,18 @@ exports.protect = async (req, res, next) => {
       .populate("ies", "name code");
 
     if (!req.user) {
+      console.log("❌ [AUTH] Usuario no encontrado en BD");
       return res.status(401).json({
         success: false,
         message: "Usuario no encontrado",
       });
     }
 
+    console.log("✅ [AUTH] Usuario encontrado:", req.user.email, "Rol:", req.user.role?.name);
+
     // Verificar si el usuario está activo
     if (!req.user.active) {
+      console.log("❌ [AUTH] Usuario inactivo");
       return res.status(401).json({
         success: false,
         message: "Tu cuenta ha sido desactivada",
@@ -64,10 +68,11 @@ exports.protect = async (req, res, next) => {
     req.user.lastAccess = new Date();
     await req.user.save({ validateBeforeSave: false });
 
+    console.log("✅ [AUTH] Middleware completado exitosamente");
     next();
   } catch (error) {
-    console.error("❌ JWT VERIFY ERROR:", error.message);
-    console.error("❌ SERVER TIME:", new Date());
+    console.error("❌ [AUTH] JWT VERIFY ERROR:", error.message);
+    console.error("❌ [AUTH] SERVER TIME:", new Date());
 
     return res.status(401).json({
       success: false,
