@@ -12,9 +12,24 @@ router.get("/", IEMS_controller.getAllIEMS);
 router.get("/:id", IEMS_controller.getIEMSById);
 
 // Rutas protegidas - solo usuarios autenticados pueden gestionar IEMS
-router.post("/", protect, authorize('Admin Nacional'), IEMS_controller.createIEMS);
-router.patch("/:id", protect, authorize('Admin Nacional', 'Admin IEMS'), IEMS_controller.updateIEMS);
-router.delete("/:id", protect, authorize('Admin Nacional'), IEMS_controller.deactivateIEMS);
+router.post(
+  "/",
+  protect,
+  authorize("Admin Nacional", "Admin IEMS"),
+  IEMS_controller.createIEMS,
+);
+router.patch(
+  "/:id",
+  protect,
+  authorize("Admin Nacional", "Admin IEMS"),
+  IEMS_controller.updateIEMS,
+);
+router.delete(
+  "/:id",
+  protect,
+  authorize("Admin Nacional", "Admin IEMS"),
+  IEMS_controller.deactivateIEMS,
+);
 
 // BULK IEMS
 // router
