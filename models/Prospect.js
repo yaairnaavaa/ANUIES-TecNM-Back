@@ -36,7 +36,7 @@ const prospectSchema = new mongoose.Schema(
         message: "CURP no tiene un formato válido",
       },
       unique: true,
-      required: [true, "Ingresa tu CURP"],
+      // required: [true, "Ingresa tu CURP"],
     },
     // ======================
     // CONTACTO
