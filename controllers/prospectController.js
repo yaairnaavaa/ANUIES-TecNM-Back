@@ -138,49 +138,81 @@ exports.updateProspectProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/prospects
 // @access  Public (temporalmente para Vercel)
 exports.getAllProspects = asyncHandler(async (req, res) => {
-  let query = Prospect.find();
+  const filters = {};
+  let campaigns = [];
 
-  // // Filtrar por IES si el usuario está autenticado y es Admin IES u Operativo
+  // Filtrar por todas las campañas asociadas a la IES del usuario
   if (req.user && ["Admin IES", "Operativo IES"].includes(req.user.role.name)) {
-    const campaignFromIes = await Camp.findOne({
-      "ies.iesId": { $eq: req.user.ies._id },
-    });
+    campaigns = await Camp.find(scopeCampaignByUser(req.user))
+      .select("_id name type specificModality status cycle")
+      .sort({ createdAt: -1 });
 
-    if(!campaignFromIes) throw new Error('No hay campaña para esa ies')
-    
-    query = query.where("originCampaign").equals(campaignFromIes._id);
+    filters.originCampaign = {
+      $in: campaigns.map((campaign) => campaign._id),
+    };
   }
 
-  // // Filtros opcionales
-  // if (req.query.classification) {
-  //   query = query.where("classification").equals(req.query.classification);
-  // }
+  if (req.query.classification) {
+    filters.classification = req.query.classification;
+  }
 
-  // if (req.query.firstChoiceIES) {
-  //   query = query.where("firstChoiceIES").equals(req.query.firstChoiceIES);
-  // }
+  if (req.query.firstChoiceIES) {
+    filters.firstChoiceIES = req.query.firstChoiceIES;
+  }
 
-  // if (req.query.contactChannel) {
-  //   query = query.where("contactChannel").equals(req.query.contactChannel);
-  // }
+  if (req.query.contactChannel) {
+    filters.contactChannel = req.query.contactChannel;
+  }
 
-  // if (req.query.active !== undefined) {
-  //   query = query.where("active").equals(req.query.active === "true");
-  // }
+  if (req.query.active !== undefined) {
+    filters.active = req.query.active === "true";
+  }
 
-  // console.log(query);
-
-  const prospects = await query
+  const prospects = await Prospect.find(filters)
     .populate("firstChoiceIES", "name code")
     .populate("originIEMS", "name code")
-    .populate("originCampaign", "name type")
+    .populate("originCampaign", "name type specificModality status cycle")
     // .populate('assignedTo', 'firstName lastName email')
     .sort({ createdAt: -1 });
+
+  const campaignsMap = new Map(
+    campaigns.map((campaign) => [
+      campaign._id.toString(),
+      {
+        id: campaign._id,
+        nombre: campaign.name,
+        tipo: campaign.type,
+        modalidadEspecifica: campaign.specificModality,
+        estatus: campaign.status,
+        ciclo: campaign.cycle,
+        prospectos: [],
+      },
+    ]),
+  );
+
+  prospects.forEach((prospect) => {
+    if (!prospect.originCampaign) return;
+
+    const campaignId = prospect.originCampaign._id.toString();
+
+    if (!campaignsMap.has(campaignId)) {
+      campaignsMap.set(campaignId, {
+        id: prospect.originCampaign._id,
+        nombre: prospect.originCampaign.name,
+        tipo: prospect.originCampaign.type,
+        modalidadEspecifica: prospect.originCampaign.specificModality,
+        prospectos: [],
+      });
+    }
+
+    campaignsMap.get(campaignId).prospectos.push(prospect);
+  });
 
   res.status(200).json({
     success: true,
     count: prospects.length,
     data: prospects,
+    campaigns: Array.from(campaignsMap.values()),
   });
 });
 
