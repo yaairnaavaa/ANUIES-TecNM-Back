@@ -26,8 +26,7 @@ const passwordResetTokenSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Índice para limpiar tokens expirados y buscar por token
-passwordResetTokenSchema.index({ token: 1 });
+// Índices para limpieza (TTL) y consultas frecuentes
 passwordResetTokenSchema.index({ email: 1, used: 1 });
 
 module.exports = mongoose.model("PasswordResetToken", passwordResetTokenSchema);
